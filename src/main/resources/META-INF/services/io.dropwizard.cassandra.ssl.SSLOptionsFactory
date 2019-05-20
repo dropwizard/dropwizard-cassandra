@@ -1,0 +1,2 @@
+io.dropwizard.cassandra.ssl.RemoteEndpointAwareJdkSSLOptionsFactory
+io.dropwizard.cassandra.ssl.RemoteEndpointAwareNettySSLOptionsFactory

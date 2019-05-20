@@ -1,0 +1,8 @@
+type: latencyAware
+subPolicy:
+  type: roundRobin
+exclusionThreshold: 1.5
+minimumMeasurements: 1
+retryPeriod: 5s
+scale: 1s
+updateRate: 1s

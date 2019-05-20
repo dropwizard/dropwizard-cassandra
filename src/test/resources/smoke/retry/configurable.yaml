@@ -1,0 +1,2 @@
+type: configurable
+writeTimeoutRetries: 3

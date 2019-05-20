@@ -1,0 +1,4 @@
+io.dropwizard.cassandra.retry.ConfigurableRetryPolicyFactory
+io.dropwizard.cassandra.retry.DefaultRetryPolicyFactory
+io.dropwizard.cassandra.retry.FallthroughRetryPolicyFactory
+io.dropwizard.cassandra.retry.LoggingRetryPolicyFactory

@@ -1,0 +1,3 @@
+type: exponential
+baseConnectionDelay: 10s
+maxReconnectionDelay: 30s

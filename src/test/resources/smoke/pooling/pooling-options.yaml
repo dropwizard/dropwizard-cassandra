@@ -1,0 +1,13 @@
+heartbeatInterval: 5s
+poolTimeout: 10s
+idleTimeout: 1min
+remote:
+  maxRequestsPerConnection: 1
+  newConnectionThreshold: 1
+  coreConnections: 1
+  maxConnections: 1
+local:
+  maxRequestsPerConnection: 1
+  newConnectionThreshold: 1
+  coreConnections: 1
+  maxConnections: 1

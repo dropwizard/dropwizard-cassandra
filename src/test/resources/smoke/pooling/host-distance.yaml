@@ -1,0 +1,4 @@
+maxRequestsPerConnection: 5
+newConnectionThreshold: 2
+coreConnections: 10
+maxConnections: 10

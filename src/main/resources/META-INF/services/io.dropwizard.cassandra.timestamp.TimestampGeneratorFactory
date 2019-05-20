@@ -1,0 +1,3 @@
+io.dropwizard.cassandra.timestamp.AtomicMonotonicTimestampGeneratorFactory
+io.dropwizard.cassandra.timestamp.ServerSideTimestampGeneratorFactory
+io.dropwizard.cassandra.timestamp.ThreadLocalMonotonicTimestampGeneratorFactory

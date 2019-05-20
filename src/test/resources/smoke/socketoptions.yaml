@@ -1,0 +1,8 @@
+connectTimeoutMillis: 5000
+readTimeoutMillis: 12000
+keepAlive: false
+reuseAddress: false
+soLinger: 1000
+tcpNoDelay: false
+receiveBufferSize: 1024
+sendBufferSize: 1024

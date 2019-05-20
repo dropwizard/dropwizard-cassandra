@@ -1,0 +1,5 @@
+type: whiteList
+subPolicy:
+  type: roundRobin
+whiteList:
+  - 127.0.0.1:9042
