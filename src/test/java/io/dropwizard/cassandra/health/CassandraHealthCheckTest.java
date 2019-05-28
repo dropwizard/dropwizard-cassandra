@@ -43,7 +43,7 @@ public class CassandraHealthCheckTest {
         when(future.get(eq(TIMEOUT.toMilliseconds()), eq(TimeUnit.MILLISECONDS)))
                 .thenReturn(mock(ResultSet.class));
 
-        assertThat(check.check()).isEqualTo(HealthCheck.Result.healthy());
+        assertThat(check.check().isHealthy()).isTrue();
     }
 
     @Test
