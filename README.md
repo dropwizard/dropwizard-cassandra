@@ -24,7 +24,7 @@ Maven:
 
 Gradle:
 ```groovy
-compile "io.dropwizard:dropwizard-cassandra:1.3.12-1"
+compile "io.dropwizard.modules:dropwizard-cassandra:1.3.12-1"
 ```
 
 ### Usage
