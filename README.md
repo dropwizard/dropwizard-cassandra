@@ -29,13 +29,14 @@ compile "io.dropwizard.modules:dropwizard-cassandra:1.3.12-1"
 
 ### Usage
 
-Minimal require config
+Minimal example configuration:
 ```
 cassandra:
   type: basic
   name: cassandra.test-cluster
   clusterName: test-cluster
-  contactPoints: [localhost]
+  contactPoints:
+    - localhost
   connectionString: localhost
   port: 9042
   loadBalancingPolicy:
