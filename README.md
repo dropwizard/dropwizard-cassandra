@@ -29,7 +29,18 @@ compile "io.dropwizard.modules:dropwizard-cassandra:1.3.12-1"
 
 ### Usage
 
-TODO
+Minimal require config
+```
+cassandra:
+  type: basic
+  name: cassandra.test-cluster
+  clusterName: test-cluster
+  contactPoints: [localhost]
+  connectionString: localhost
+  port: 9042
+  loadBalancingPolicy:
+    type: roundRobin
+```
 
 ### Acknowledgements
 This library was originally built to extend https://github.com/composable-systems/dropwizard-cassandra, but was forked due to some
