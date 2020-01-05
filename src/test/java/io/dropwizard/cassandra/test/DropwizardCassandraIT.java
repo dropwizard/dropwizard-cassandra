@@ -51,9 +51,15 @@ public class DropwizardCassandraIT {
     }
 
     @BeforeClass
-    public static void setUpBeforeClass() {
-        final String cassandraPort = Integer.toString(CASSANDRA.getCluster().getMetadata().getAllHosts().iterator().next()
-                .getSocketAddress().getPort());
+    public static void setUpBeforeClass() throws Exception {
+        final String cassandraPort = Integer.toString(CASSANDRA.getCluster()
+                .getMetadata()
+                .getAllHosts()
+                .iterator()
+                .next()
+                .getEndPoint()
+                .resolve()
+                .getPort());
         app = new DropwizardTestSupport<>(SmokeTestApp.class, Resources.getResource("minimal.yaml").getPath(),
                 ConfigOverride.config(CQL_PORT_KEY, cassandraPort));
         app.before();
