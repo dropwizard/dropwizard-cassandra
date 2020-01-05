@@ -71,17 +71,17 @@
     <maven.compiler.showWarnings>true</maven.compiler.showWarnings>
     <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
 
-    <brave.version>5.6.11</brave.version>
-    <dropwizard.version>1.3.12</dropwizard.version>
-    <cassandra-driver.version>3.7.1</cassandra-driver.version>
-    <cassandra-brave.version>0.10.2</cassandra-brave.version>
+    <brave.version>5.9.1</brave.version>
+    <dropwizard.version>2.0.0</dropwizard.version>
+    <cassandra-driver.version>3.8.0</cassandra-driver.version>
+    <cassandra-brave.version>0.10.3</cassandra-brave.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>io.dropwizard</groupId>
-        <artifactId>dropwizard-bom</artifactId>
+        <artifactId>dropwizard-dependencies</artifactId>
         <version>${dropwizard.version}</version>
         <type>pom</type>
         <scope>import</scope>
@@ -100,7 +100,7 @@
       <version>${cassandra-driver.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.zipkin.brave.cassandra</groupId>
+      <groupId>io.zipkin.brave.cassandra</groupId>
       <artifactId>brave-instrumentation-cassandra-driver</artifactId>
       <version>${cassandra-brave.version}</version>
     </dependency>

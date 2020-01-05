@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -31,8 +32,9 @@ public class CassandraManagerTest {
         final CloseFuture future = mock(CloseFuture.class);
         when(cluster.closeAsync()).thenReturn(future);
 
-        when(future.get(eq(GRACEFUL_SHUTDOWN_DURATION.toMilliseconds()), eq(TimeUnit.MILLISECONDS)))
-                .thenReturn(null);
+        doNothing()
+                .when(future)
+                .get(eq(GRACEFUL_SHUTDOWN_DURATION.toMilliseconds()), eq(TimeUnit.MILLISECONDS));
 
         cassandraManager.stop();
 

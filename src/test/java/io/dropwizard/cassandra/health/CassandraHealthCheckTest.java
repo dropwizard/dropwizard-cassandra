@@ -74,7 +74,7 @@ public class CassandraHealthCheckTest {
 
         final InetSocketAddress inetSocketAddress = new InetSocketAddress("127.0.0.1", 9042);
         final ReadFailureException exception =
-                new ReadFailureException(inetSocketAddress, ConsistencyLevel.ONE, 0, 1, 1,
+                new ReadFailureException(() -> inetSocketAddress, ConsistencyLevel.ONE, 0, 1, 1,
                         Collections.singletonMap(InetAddress.getByName("127.0.0.1"), 1), false);
         when(future.get(eq(TIMEOUT.toMilliseconds()), eq(TimeUnit.MILLISECONDS)))
                 .thenThrow(exception);
