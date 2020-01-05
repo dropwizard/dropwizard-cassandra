@@ -10,6 +10,12 @@ This bundle comes with out-of-the-box support for:
 ## Future improvements
 * Schema migrations functionality, similar to what flyway and liquibase offer for SQL databases.
 
+## Dropwizard Version Support Matrix
+dropwizard-cassandra    | Dropwizard v1.3.x  | Dropwizard v2.0.x
+----------------------- | ------------------ | ------------------
+v1.3.x                  | :white_check_mark: | :white_check_mark:
+v1.4.x                  | :white_check_mark: | :white_check_mark:
+
 ## Usage
 Add dependency on library.
 
@@ -18,13 +24,13 @@ Maven:
 <dependency>
   <groupId>io.dropwizard.modules</groupId>
   <artifactId>dropwizard-cassandra</artifactId>
-  <version>1.3.12-1</version>
+  <version>1.4.0</version>
 </dependency>
 ```
 
 Gradle:
 ```groovy
-compile "io.dropwizard.modules:dropwizard-cassandra:1.3.12-1"
+compile "io.dropwizard.modules:dropwizard-cassandra:1.4.0"
 ```
 
 ### Usage
