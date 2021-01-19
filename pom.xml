@@ -31,8 +31,8 @@
   </scm>
 
   <ciManagement>
-    <system>Travis CI</system>
-    <url>https://travis-ci.org/dropwizard/dropwizard-cassandra</url>
+    <system>GitHub Actions</system>
+    <url>https://github.com/dropwizard/dropwizard-cassandra/actions</url>
   </ciManagement>
 
   <issueManagement>
@@ -264,6 +264,12 @@
                 <goals>
                   <goal>sign</goal>
                 </goals>
+                <configuration>
+                  <gpgArguments>
+                    <arg>--pinentry-mode</arg>
+                    <arg>loopback</arg>
+                  </gpgArguments>
+                </configuration>
               </execution>
             </executions>
           </plugin>

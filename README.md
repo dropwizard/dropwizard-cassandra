@@ -1,4 +1,9 @@
 # dropwizard-cassandra
+
+[![Build](https://github.com/dropwizard/dropwizard-cassandra/workflows/Build/badge.svg)](https://github.com/dropwizard/dropwizard-cassandra/actions?query=workflow%3ABuild)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dropwizard_dropwizard-cassandra&metric=alert_status)](https://sonarcloud.io/dashboard?id=dropwizard_dropwizard-cassandra)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.dropwizard.modules/dropwizard-cassandra/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.dropwizard.modules/dropwizard-cassandra/)
+
 Provides easy integration for Dropwizard applications with the Datastax Cassandra java driver..
 
 This bundle comes with out-of-the-box support for:
