@@ -1,0 +1,7 @@
+type: default
+cipherSuites: ["a", "b"]
+hostValidation: true
+keyStorePassword: keyStorePassword
+keyStorePath: keyStorePath
+trustStorePassword: trustStorePassword
+trustStorePath: trustStorePath

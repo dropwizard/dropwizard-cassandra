@@ -1,8 +1,10 @@
 package io.dropwizard.cassandra.speculativeexecution;
 
-import com.datastax.driver.core.policies.NoSpeculativeExecutionPolicy;
+import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
+import com.datastax.oss.driver.internal.core.specex.NoSpeculativeExecutionPolicy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
+import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 import io.dropwizard.configuration.ConfigurationException;
 import io.dropwizard.configuration.YamlConfigurationFactory;
 import io.dropwizard.jackson.DiscoverableSubtypeResolver;
@@ -17,6 +19,7 @@ import java.net.URISyntaxException;
 import javax.validation.Validator;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class NoSpeculativeExecutionPolicyFactoryTest {
     private final ObjectMapper objectMapper = Jackson.newObjectMapper();
@@ -35,7 +38,9 @@ public class NoSpeculativeExecutionPolicyFactoryTest {
         final File yaml = new File(Resources.getResource("smoke/speculativeexecution/no.yaml").toURI());
         final SpeculativeExecutionPolicyFactory factory = this.factory.build(yaml);
         assertThat(factory).isInstanceOf(NoSpeculativeExecutionPolicyFactory.class);
-
-        assertThat(factory.build()).isInstanceOf(NoSpeculativeExecutionPolicy.class);
+        DropwizardProgrammaticDriverConfigLoaderBuilder builder = DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
+        factory.build(builder);
+        assertEquals(builder.build().getInitialConfig().getDefaultProfile().getString(DefaultDriverOption.SPECULATIVE_EXECUTION_POLICY_CLASS),
+                NoSpeculativeExecutionPolicy.class.getName());
     }
 }

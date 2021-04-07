@@ -1,8 +1,10 @@
 package io.dropwizard.cassandra.speculativeexecution;
 
-import com.datastax.driver.core.policies.ConstantSpeculativeExecutionPolicy;
+import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
+import com.datastax.oss.driver.internal.core.specex.ConstantSpeculativeExecutionPolicy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
+import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 import io.dropwizard.configuration.ConfigurationException;
 import io.dropwizard.configuration.YamlConfigurationFactory;
 import io.dropwizard.jackson.DiscoverableSubtypeResolver;
@@ -18,6 +20,7 @@ import java.net.URISyntaxException;
 import javax.validation.Validator;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class ConstantSpeculativeExecutionPolicyFactoryTest {
     private final ObjectMapper objectMapper = Jackson.newObjectMapper();
@@ -41,6 +44,13 @@ public class ConstantSpeculativeExecutionPolicyFactoryTest {
         assertThat(speculativeExecutionPolicyFactory.getDelay()).isEqualTo(Duration.seconds(1));
         assertThat(speculativeExecutionPolicyFactory.getMaxSpeculativeExecutions()).isEqualTo(3);
 
-        assertThat(factory.build()).isInstanceOf(ConstantSpeculativeExecutionPolicy.class);
+        DropwizardProgrammaticDriverConfigLoaderBuilder builder = DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
+        factory.build(builder);
+        assertEquals(builder.build().getInitialConfig().getDefaultProfile().getString(DefaultDriverOption.SPECULATIVE_EXECUTION_POLICY_CLASS),
+                ConstantSpeculativeExecutionPolicy.class.getName());
+        assertEquals(builder.build().getInitialConfig().getDefaultProfile().getInt(DefaultDriverOption.SPECULATIVE_EXECUTION_MAX),
+                3);
+        assertEquals(builder.build().getInitialConfig().getDefaultProfile().getInt(DefaultDriverOption.SPECULATIVE_EXECUTION_DELAY),
+                1000);
     }
 }

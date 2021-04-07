@@ -8,7 +8,7 @@
 
   <groupId>io.dropwizard.modules</groupId>
   <artifactId>dropwizard-cassandra</artifactId>
-  <version>1.4.1-SNAPSHOT</version>
+  <version>2.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Dropwizard Cassandra</name>
@@ -77,7 +77,7 @@
 
     <brave.version>5.9.1</brave.version>
     <dropwizard.version>2.0.21</dropwizard.version>
-    <cassandra-driver.version>3.8.0</cassandra-driver.version>
+    <cassandra-driver.version>4.11.0</cassandra-driver.version>
     <cassandra-brave.version>0.11.1</cassandra-brave.version>
   </properties>
 
@@ -99,9 +99,14 @@
       <artifactId>dropwizard-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.datastax.cassandra</groupId>
-      <artifactId>cassandra-driver-core</artifactId>
+      <groupId>com.datastax.oss</groupId>
+      <artifactId>java-driver-core</artifactId>
       <version>${cassandra-driver.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.lz4</groupId>
+      <artifactId>lz4-java</artifactId>
+      <version>1.4.1</version>
     </dependency>
     <dependency>
       <groupId>io.zipkin.brave.cassandra</groupId>
@@ -123,7 +128,7 @@
     <dependency>
       <groupId>org.cassandraunit</groupId>
       <artifactId>cassandra-unit</artifactId>
-      <version>3.11.2.0</version>
+      <version>4.3.1.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>

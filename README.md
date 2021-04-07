@@ -29,13 +29,13 @@ Maven:
 <dependency>
   <groupId>io.dropwizard.modules</groupId>
   <artifactId>dropwizard-cassandra</artifactId>
-  <version>1.4.0</version>
+  <version>2.0.0</version>
 </dependency>
 ```
 
 Gradle:
 ```groovy
-compile "io.dropwizard.modules:dropwizard-cassandra:1.4.0"
+compile "io.dropwizard.modules:dropwizard-cassandra:2.0.0"
 ```
 
 ### Usage
@@ -57,5 +57,5 @@ cassandra:
 ### Acknowledgements
 This library was originally built to extend https://github.com/composable-systems/dropwizard-cassandra, but was forked due to some
 needs that were unmet (for instance, being able to define different `CassandraFactory` implementations, if a modified client is used), and
-due to lack of maintenance. Big thanks to @stuartgunter for his module, which inspired this one heavily, and for which this module borrows 
+due to lack of maintenance. Big thanks to @stuartgunter for his module, which inspired this one heavily, and for which this module borrows
 a lot of ideas and code.

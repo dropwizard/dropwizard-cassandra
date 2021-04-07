@@ -3,8 +3,7 @@ package io.dropwizard.cassandra.test.smoke;
 import brave.Tracing;
 import brave.propagation.StrictScopeDecorator;
 import brave.propagation.ThreadLocalCurrentTraceContext;
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.Session;
+import com.datastax.oss.driver.api.core.CqlSession;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -21,8 +20,7 @@ public class SmokeTestApp extends Application<SmokeTestConfiguration> {
                     .build())
             .build();
 
-    private Cluster cluster;
-    private Session session;
+    private CqlSession session;
 
     @AfterClass
     public static void tearDownAfterClass() {
@@ -34,17 +32,13 @@ public class SmokeTestApp extends Application<SmokeTestConfiguration> {
 
     @Override
     public void run(final SmokeTestConfiguration configuration, final Environment environment) {
-        log.debug("Running smoke test for {}", configuration.getCassandraFactory().getClusterName());
+        log.debug("Running smoke test");
 
         this.session = configuration.getCassandraFactory().build(environment.metrics(), environment.lifecycle(),
                 environment.healthChecks(), tracing);
     }
 
-    public Cluster getCluster() {
-        return cluster;
-    }
-
-    public Session getSession() {
+    public CqlSession getSession() {
         return session;
     }
 }

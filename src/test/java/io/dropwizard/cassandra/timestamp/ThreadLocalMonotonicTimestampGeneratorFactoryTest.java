@@ -1,9 +1,10 @@
 package io.dropwizard.cassandra.timestamp;
 
-import com.datastax.driver.core.ThreadLocalMonotonicTimestampGenerator;
-import com.datastax.driver.core.TimestampGenerator;
+import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
+import com.datastax.oss.driver.internal.core.time.ThreadLocalTimestampGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
+import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 import io.dropwizard.configuration.ConfigurationException;
 import io.dropwizard.configuration.YamlConfigurationFactory;
 import io.dropwizard.jackson.DiscoverableSubtypeResolver;
@@ -20,6 +21,7 @@ import javax.validation.Validator;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class ThreadLocalMonotonicTimestampGeneratorFactoryTest {
@@ -28,6 +30,7 @@ public class ThreadLocalMonotonicTimestampGeneratorFactoryTest {
     private final Validator validator = Validators.newValidator();
     private final YamlConfigurationFactory<TimestampGeneratorFactory> factory =
             new YamlConfigurationFactory<>(TimestampGeneratorFactory.class, validator, objectMapper, "dw");
+    private final DropwizardProgrammaticDriverConfigLoaderBuilder builder = DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
 
     @Test
     public void shouldBuildAnAtomicMonotonicTimestampGenerator() throws URISyntaxException, IOException,
@@ -36,16 +39,20 @@ public class ThreadLocalMonotonicTimestampGeneratorFactoryTest {
                 .toURI());
         final TimestampGeneratorFactory factory = this.factory.build(yml);
         assertThat(factory, instanceOf(ThreadLocalMonotonicTimestampGeneratorFactory.class));
-        assertThat(factory.build(), instanceOf(ThreadLocalMonotonicTimestampGenerator.class));
+        factory.build(builder);
+        assertEquals(builder.build().getInitialConfig().getDefaultProfile()
+                        .getString(DefaultDriverOption.TIMESTAMP_GENERATOR_CLASS),
+                ThreadLocalTimestampGenerator.class.getName());
     }
 
     @Test
     public void buildsTimestampGenerator() throws Exception {
         final TimestampGeneratorFactory factory = new ThreadLocalMonotonicTimestampGeneratorFactory();
 
-        final TimestampGenerator policy = factory.build();
-
-        assertThat(policy, is(instanceOf(ThreadLocalMonotonicTimestampGenerator.class)));
+        factory.build(builder);
+        assertEquals(builder.build().getInitialConfig().getDefaultProfile()
+                        .getString(DefaultDriverOption.TIMESTAMP_GENERATOR_CLASS),
+                ThreadLocalTimestampGenerator.class.getName());
     }
 
     @Test

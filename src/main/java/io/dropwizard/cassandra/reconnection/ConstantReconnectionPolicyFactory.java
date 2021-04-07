@@ -1,9 +1,10 @@
 package io.dropwizard.cassandra.reconnection;
 
-import com.datastax.driver.core.policies.ConstantReconnectionPolicy;
-import com.datastax.driver.core.policies.ReconnectionPolicy;
+import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
+import com.datastax.oss.driver.internal.core.connection.ConstantReconnectionPolicy;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 import io.dropwizard.util.Duration;
 import io.dropwizard.validation.MaxDuration;
 
@@ -27,7 +28,8 @@ public class ConstantReconnectionPolicyFactory implements ReconnectionPolicyFact
     }
 
     @Override
-    public ReconnectionPolicy build() {
-        return new ConstantReconnectionPolicy(delay.toMilliseconds());
+    public void build(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+        builder.withClass(DefaultDriverOption.RECONNECTION_POLICY_CLASS, ConstantReconnectionPolicy.class);
+        builder.withLong(DefaultDriverOption.RECONNECTION_BASE_DELAY, getDelay().toMilliseconds());
     }
 }
