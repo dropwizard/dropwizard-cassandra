@@ -3,12 +3,12 @@ package io.dropwizard.cassandra;
 import brave.Tracing;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.health.HealthCheckRegistry;
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.ProtocolOptions;
-import com.datastax.driver.core.ProtocolVersion;
-import com.datastax.driver.core.QueryOptions;
-import com.datastax.driver.core.Session;
-import com.datastax.driver.core.SocketOptions;
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.CqlSessionBuilder;
+import com.datastax.oss.driver.api.core.ProtocolVersion;
+import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
+import com.datastax.oss.driver.api.core.config.DriverConfigLoader;
+import com.datastax.oss.driver.api.core.config.ProgrammaticDriverConfigLoaderBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.dropwizard.cassandra.auth.AuthProviderFactory;
@@ -16,7 +16,6 @@ import io.dropwizard.cassandra.health.CassandraHealthCheck;
 import io.dropwizard.cassandra.loadbalancing.LoadBalancingPolicyFactory;
 import io.dropwizard.cassandra.managed.CassandraManager;
 import io.dropwizard.cassandra.metrics.CassandraMetricRegistryListener;
-import io.dropwizard.cassandra.netty.NettyOptionsFactory;
 import io.dropwizard.cassandra.network.AddressTranslatorFactory;
 import io.dropwizard.cassandra.pooling.PoolingOptionsFactory;
 import io.dropwizard.cassandra.reconnection.ExponentialReconnectionPolicyFactory;
@@ -30,42 +29,31 @@ import io.dropwizard.jackson.Discoverable;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import io.dropwizard.util.Duration;
 import io.dropwizard.validation.MaxDuration;
-import io.dropwizard.validation.PortRange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.Map;
+import java.util.Objects;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 public abstract class CassandraFactory implements Discoverable {
     private static final Logger log = LoggerFactory.getLogger(CassandraFactory.class);
-
-    @NotNull
-    @JsonProperty
-    protected String name = "cassandra";
     @JsonProperty
     protected boolean metricsEnabled = true;
-    @JsonProperty
-    private boolean jmxEnabled = false;
-    @NotNull
-    @JsonProperty
-    protected String connectionString;
-    @NotNull
-    @JsonProperty
-    protected String clusterName;
     @NotNull
     @JsonProperty
     protected String validationQuery = "SELECT key FROM system.local;";
     @NotNull
     @JsonProperty
-    protected ProtocolVersion protocolVersion = ProtocolVersion.NEWEST_SUPPORTED;
+    protected ProtocolVersion protocolVersion = ProtocolVersion.DEFAULT;
     @Valid
     @JsonProperty
     protected SSLOptionsFactory ssl;
     @NotNull
     @JsonProperty
-    protected ProtocolOptions.Compression compression = ProtocolOptions.Compression.LZ4;
+    protected String compression = "lz4";
     @Valid
     @JsonProperty
     protected AuthProviderFactory authProvider;
@@ -75,10 +63,6 @@ public abstract class CassandraFactory implements Discoverable {
     @Valid
     @JsonProperty
     protected SpeculativeExecutionPolicyFactory speculativeExecutionPolicy;
-    @JsonProperty
-    protected QueryOptions queryOptions;
-    @JsonProperty
-    protected SocketOptions socketOptions;
     @Valid
     @JsonProperty
     protected PoolingOptionsFactory poolingOptions;
@@ -94,37 +78,19 @@ public abstract class CassandraFactory implements Discoverable {
     @Valid
     @JsonProperty
     protected TimestampGeneratorFactory timestampGenerator = new AtomicMonotonicTimestampGeneratorFactory();
-    @Valid
-    @JsonProperty
-    protected NettyOptionsFactory nettyOptions;
     @NotNull
     @Valid
     @JsonProperty
     protected ReconnectionPolicyFactory reconnectionPolicyFactory = new ExponentialReconnectionPolicyFactory();
     @MaxDuration(value = Integer.MAX_VALUE)
-    @NotNull
-    @JsonProperty
-    protected Duration maxSchemaAgreementWait = Duration.seconds(ProtocolOptions.DEFAULT_MAX_SCHEMA_AGREEMENT_WAIT_SECONDS);
     @Valid
     @NotNull
     @JsonProperty
     protected LoadBalancingPolicyFactory loadBalancingPolicy;
 
-    @PortRange
-    @JsonProperty
-    protected int port = 9042;
-
     @NotNull
     @JsonProperty
     protected Double reconnectionThreshold = 0.5d;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
 
     public boolean isMetricsEnabled() {
         return metricsEnabled;
@@ -132,30 +98,6 @@ public abstract class CassandraFactory implements Discoverable {
 
     public void setMetricsEnabled(final boolean metricsEnabled) {
         this.metricsEnabled = metricsEnabled;
-    }
-
-    public boolean isJmxEnabled() {
-        return jmxEnabled;
-    }
-
-    public void setJmxEnabled(final boolean jmxEnabled) {
-        this.jmxEnabled = jmxEnabled;
-    }
-
-    public String getConnectionString() {
-        return connectionString;
-    }
-
-    public void setConnectionString(final String connectionString) {
-        this.connectionString = connectionString;
-    }
-
-    public String getClusterName() {
-        return clusterName;
-    }
-
-    public void setClusterName(final String clusterName) {
-        this.clusterName = clusterName;
     }
 
     public String getValidationQuery() {
@@ -182,11 +124,11 @@ public abstract class CassandraFactory implements Discoverable {
         this.ssl = ssl;
     }
 
-    public ProtocolOptions.Compression getCompression() {
+    public String getCompression() {
         return compression;
     }
 
-    public void setCompression(final ProtocolOptions.Compression compression) {
+    public void setCompression(final String compression) {
         this.compression = compression;
     }
 
@@ -212,22 +154,6 @@ public abstract class CassandraFactory implements Discoverable {
 
     public void setSpeculativeExecutionPolicy(final SpeculativeExecutionPolicyFactory speculativeExecutionPolicy) {
         this.speculativeExecutionPolicy = speculativeExecutionPolicy;
-    }
-
-    public QueryOptions getQueryOptions() {
-        return queryOptions;
-    }
-
-    public void setQueryOptions(final QueryOptions queryOptions) {
-        this.queryOptions = queryOptions;
-    }
-
-    public SocketOptions getSocketOptions() {
-        return socketOptions;
-    }
-
-    public void setSocketOptions(final SocketOptions socketOptions) {
-        this.socketOptions = socketOptions;
     }
 
     public PoolingOptionsFactory getPoolingOptions() {
@@ -270,28 +196,12 @@ public abstract class CassandraFactory implements Discoverable {
         this.timestampGenerator = timestampGenerator;
     }
 
-    public NettyOptionsFactory getNettyOptions() {
-        return nettyOptions;
-    }
-
-    public void setNettyOptions(final NettyOptionsFactory nettyOptions) {
-        this.nettyOptions = nettyOptions;
-    }
-
     public ReconnectionPolicyFactory getReconnectionPolicyFactory() {
         return reconnectionPolicyFactory;
     }
 
     public void setReconnectionPolicyFactory(final ReconnectionPolicyFactory reconnectionPolicyFactory) {
         this.reconnectionPolicyFactory = reconnectionPolicyFactory;
-    }
-
-    public Duration getMaxSchemaAgreementWait() {
-        return maxSchemaAgreementWait;
-    }
-
-    public void setMaxSchemaAgreementWait(final Duration maxSchemaAgreementWait) {
-        this.maxSchemaAgreementWait = maxSchemaAgreementWait;
     }
 
     public LoadBalancingPolicyFactory getLoadBalancingPolicy() {
@@ -302,14 +212,6 @@ public abstract class CassandraFactory implements Discoverable {
         this.loadBalancingPolicy = loadBalancingPolicy;
     }
 
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(final int port) {
-        this.port = port;
-    }
-
     public Double getReconnectionThreshold() {
         return reconnectionThreshold;
     }
@@ -318,93 +220,71 @@ public abstract class CassandraFactory implements Discoverable {
         this.reconnectionThreshold = reconnectionThreshold;
     }
 
-    protected Cluster.Builder setUpClusterBuilder(final MetricRegistry metrics) {
-        final Cluster.Builder builder = Cluster.builder()
-                .withCompression(compression)
-                .withTimestampGenerator(timestampGenerator.build())
-                .withReconnectionPolicy(reconnectionPolicyFactory.build())
-                .withClusterName(clusterName)
-                .withLoadBalancingPolicy(loadBalancingPolicy.build())
-                .withProtocolVersion(protocolVersion);
-
-        if (!jmxEnabled) {
-            builder.withoutJMXReporting();
+    protected CqlSessionBuilder setUpClusterBuilder(final MetricRegistry metrics) {
+        CqlSessionBuilder builder = CqlSession.builder();
+        if (metricsEnabled) {
+            builder.withMetricRegistry(metrics);
         }
+        return builder.withConfigLoader(getConfig(metrics));
+    }
 
-        if (!metricsEnabled) {
-            builder.withoutMetrics();
-        }
+    protected DriverConfigLoader getConfig(final MetricRegistry metrics) {
 
-        if (ssl != null) {
-            builder.withSSL(ssl.build());
-        }
+        DropwizardProgrammaticDriverConfigLoaderBuilder configLoaderBuilder =
+                DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
 
-        if (authProvider != null) {
-            builder.withAuthProvider(authProvider.build());
-        }
+        configLoaderBuilder.withNullSafeString(DefaultDriverOption.PROTOCOL_VERSION, protocolVersion.name())
+                .withNullSafeString(DefaultDriverOption.PROTOCOL_COMPRESSION, compression);
 
-        if (retryPolicy != null) {
-            builder.withRetryPolicy(retryPolicy.build());
-        }
 
-        if (speculativeExecutionPolicy != null) {
-            builder.withSpeculativeExecutionPolicy(speculativeExecutionPolicy.build());
-        }
+        this.configBuilderHelper(ssl, configLoaderBuilder)
+                .configBuilderHelper(authProvider, configLoaderBuilder)
+                .configBuilderHelper(retryPolicy, configLoaderBuilder)
+                .configBuilderHelper(speculativeExecutionPolicy, configLoaderBuilder)
+                .configBuilderHelper(poolingOptions, configLoaderBuilder)
+                .configBuilderHelper(addressTranslator, configLoaderBuilder);
 
-        if (queryOptions != null) {
-            builder.withQueryOptions(queryOptions);
-        }
-
-        if (socketOptions != null) {
-            builder.withSocketOptions(socketOptions);
-        }
-
-        if (poolingOptions != null) {
-            builder.withPoolingOptions(poolingOptions.build());
-        }
-
-        if (nettyOptions != null) {
-            builder.withNettyOptions(nettyOptions.build());
-        }
-
-        if (addressTranslator != null) {
-            builder.withAddressTranslator(addressTranslator.build());
-        }
-
-        addAdditionalBuilderOptions(builder, metrics);
-
-        return builder;
+        addAdditionalBuilderOptions(configLoaderBuilder, metrics);
+        return configLoaderBuilder.build();
     }
 
     /**
      * Point of extension, if any additional builder options that are not provided by default are desired
      *
-     * @param builder the cluster builder
+     * @param loader  the cluster builder
      * @param metrics dropwizard app metric registry
      */
-    protected void addAdditionalBuilderOptions(final Cluster.Builder builder,
+    protected void addAdditionalBuilderOptions(final ProgrammaticDriverConfigLoaderBuilder loader,
                                                final MetricRegistry metrics) {
         // does nothing by default
     }
 
-    protected void setUpHealthChecks(final Session session, final HealthCheckRegistry healthChecks) {
-        log.debug("Registering Cassandra health check for name={}", name);
+    protected void setUpHealthChecks(final CqlSession session, final HealthCheckRegistry healthChecks) {
+        log.debug("Registering Cassandra health check for name={}", session.getName());
         final CassandraHealthCheck healthCheck = new CassandraHealthCheck(session, getValidationQuery(), getHealthCheckTimeout());
-        healthChecks.register(name, healthCheck);
+        healthChecks.register(session.getName(), healthCheck);
     }
 
-    protected void setUpMetrics(final Cluster cluster, final MetricRegistry metrics) {
+    protected void setUpMetrics(final CqlSession session, final MetricRegistry metrics) {
         // ties the Cassandra driver metrics into the app's MetricRegistry
         if (metricsEnabled) {
-            final CassandraMetricRegistryListener metricRegistryListener = new CassandraMetricRegistryListener(metrics, name);
-            cluster.getMetrics().getRegistry().addListener(metricRegistryListener);
+            final CassandraMetricRegistryListener metricRegistryListener = new CassandraMetricRegistryListener(metrics, session.getName());
+            session.getMetrics().ifPresent(metricsRegistry -> metricsRegistry.getRegistry().addListener(metricRegistryListener));
         }
     }
 
-    protected void setUpLifecycle(final Cluster cluster, final LifecycleEnvironment lifecycle) {
-        lifecycle.manage(new CassandraManager(cluster, shutdownGracePeriod));
+    protected void setUpLifecycle(final CqlSession session, final LifecycleEnvironment lifecycle) {
+        lifecycle.manage(new CassandraManager(session, shutdownGracePeriod));
     }
 
-    public abstract Session build(MetricRegistry metrics, LifecycleEnvironment lifecycle, HealthCheckRegistry healthChecks,
-                                  Tracing tracing);
+    public abstract CqlSession build(MetricRegistry metrics, LifecycleEnvironment lifecycle, HealthCheckRegistry healthChecks,
+                                     Tracing tracing);
+
+    protected CassandraFactory configBuilderHelper(DropwizardCassandraConfigBuilder dropwizardCassandraConfigBuilder,
+                                                   DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+        if (Objects.nonNull(dropwizardCassandraConfigBuilder)) {
+            dropwizardCassandraConfigBuilder.build(builder);
+        }
+        return this;
+    }
 }

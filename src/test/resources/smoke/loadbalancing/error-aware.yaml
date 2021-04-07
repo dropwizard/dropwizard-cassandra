@@ -1,5 +1,0 @@
-type: errorAware
-subPolicy:
-  type: roundRobin
-maxErrorsPerMinute: 10
-retryPeriod: 5s

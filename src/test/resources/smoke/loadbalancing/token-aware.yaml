@@ -1,3 +1,0 @@
-type: tokenAware
-subPolicy:
-  type: roundRobin

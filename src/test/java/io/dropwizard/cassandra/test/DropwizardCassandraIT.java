@@ -1,8 +1,7 @@
 package io.dropwizard.cassandra.test;
 
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.core.Session;
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.google.common.io.Resources;
 import io.dropwizard.cassandra.test.smoke.SmokeTestApp;
 import io.dropwizard.cassandra.test.smoke.SmokeTestConfiguration;
@@ -37,9 +36,6 @@ import static org.junit.Assert.assertThat;
  * Perhaps an alternative approach will need to be taken for these tests.
  */
 public class DropwizardCassandraIT {
-
-    private static final String CQL_PORT_KEY = "cassandra.port";
-
     @ClassRule
     public static final CassandraCQLUnit CASSANDRA = new CassandraCQLUnit(new ClassPathCQLDataSet("test.cql"),
             EmbeddedCassandraServerHelper.CASSANDRA_RNDPORT_YML_FILE, 30000L, 30000);
@@ -52,16 +48,14 @@ public class DropwizardCassandraIT {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        final String cassandraPort = Integer.toString(CASSANDRA.getCluster()
+        final String cassandraAddress = CASSANDRA.getSession()
                 .getMetadata()
-                .getAllHosts()
-                .iterator()
-                .next()
-                .getEndPoint()
-                .resolve()
-                .getPort());
+                .getNodes()
+                .values()
+                .toArray()[0]
+                .toString();
         app = new DropwizardTestSupport<>(SmokeTestApp.class, Resources.getResource("minimal.yaml").getPath(),
-                ConfigOverride.config(CQL_PORT_KEY, cassandraPort));
+                ConfigOverride.config("contactPoints", cassandraAddress));
         app.before();
     }
 
@@ -73,7 +67,7 @@ public class DropwizardCassandraIT {
     @Test
     @Ignore
     public void canQueryCassandra() {
-        final Session session = ((SmokeTestApp) app.getApplication()).getSession();
+        final CqlSession session = ((SmokeTestApp) app.getApplication()).getSession();
         final ResultSet resultSet = session.execute("SELECT * FROM system_schema.columns");
         final List<String> result = resultSet.all().stream()
                 .map(r -> r.getString(0))
@@ -105,7 +99,7 @@ public class DropwizardCassandraIT {
     @Test
     @Ignore
     public void metricsShouldBeInitialized() {
-        final Cluster cluster = ((SmokeTestApp) app.getApplication()).getCluster();
-        assertThat(cluster.getMetrics(), is(not(nullValue())));
+        final CqlSession session = ((SmokeTestApp) app.getApplication()).getSession();
+        assertThat(session.getMetrics(), is(not(nullValue())));
     }
 }

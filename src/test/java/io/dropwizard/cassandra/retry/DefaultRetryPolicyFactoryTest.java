@@ -1,8 +1,10 @@
 package io.dropwizard.cassandra.retry;
 
-import com.datastax.driver.core.policies.DefaultRetryPolicy;
+import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
+import com.datastax.oss.driver.internal.core.retry.DefaultRetryPolicy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
+import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 import io.dropwizard.configuration.ConfigurationException;
 import io.dropwizard.configuration.YamlConfigurationFactory;
 import io.dropwizard.jackson.DiscoverableSubtypeResolver;
@@ -17,6 +19,7 @@ import java.net.URISyntaxException;
 import javax.validation.Validator;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class DefaultRetryPolicyFactoryTest {
     private final ObjectMapper objectMapper = Jackson.newObjectMapper();
@@ -35,7 +38,9 @@ public class DefaultRetryPolicyFactoryTest {
         final File yaml = new File(Resources.getResource("smoke/retry/default.yaml").toURI());
         final RetryPolicyFactory factory = this.factory.build(yaml);
         assertThat(factory).isInstanceOf(DefaultRetryPolicyFactory.class);
-
-        assertThat(factory.build()).isInstanceOf(DefaultRetryPolicy.class);
+        DropwizardProgrammaticDriverConfigLoaderBuilder builder = DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
+        factory.build(builder);
+        assertThat(builder.build().getInitialConfig().getDefaultProfile().getString(DefaultDriverOption.RETRY_POLICY_CLASS))
+                .isEqualTo(DefaultRetryPolicy.class.getName());
     }
 }

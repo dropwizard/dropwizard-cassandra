@@ -1,8 +1,10 @@
 package io.dropwizard.cassandra.network;
 
-import com.datastax.driver.core.policies.EC2MultiRegionAddressTranslator;
+import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
+import com.datastax.oss.driver.internal.core.addresstranslation.Ec2MultiRegionAddressTranslator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
+import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 import io.dropwizard.configuration.ConfigurationException;
 import io.dropwizard.configuration.YamlConfigurationFactory;
 import io.dropwizard.jackson.DiscoverableSubtypeResolver;
@@ -23,6 +25,7 @@ public class EC2MultiRegionAddressTranslatorFactoryTest {
     private final Validator validator = Validators.newValidator();
     private final YamlConfigurationFactory<AddressTranslatorFactory> factory =
             new YamlConfigurationFactory<>(AddressTranslatorFactory.class, validator, objectMapper, "dw");
+    DropwizardProgrammaticDriverConfigLoaderBuilder builder = DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
 
     @Test
     public void isDiscoverable() throws Exception {
@@ -35,7 +38,9 @@ public class EC2MultiRegionAddressTranslatorFactoryTest {
         final File yaml = new File(Resources.getResource("smoke/network/ec2.yaml").toURI());
         final AddressTranslatorFactory factory = this.factory.build(yaml);
         assertThat(factory).isInstanceOf(EC2MultiRegionAddressTranslatorFactory.class);
-
-        assertThat(factory.build()).isInstanceOf(EC2MultiRegionAddressTranslator.class);
+        factory.build(builder);
+        assertThat(builder.build().getInitialConfig().getDefaultProfile()
+                .getString(DefaultDriverOption.ADDRESS_TRANSLATOR_CLASS))
+                .isEqualTo(Ec2MultiRegionAddressTranslator.class.getName());
     }
 }
