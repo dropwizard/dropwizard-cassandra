@@ -7,3 +7,4 @@ io.dropwizard.cassandra.speculativeexecution.SpeculativeExecutionPolicyFactory
 io.dropwizard.cassandra.ssl.SSLOptionsFactory
 io.dropwizard.cassandra.timestamp.TimestampGeneratorFactory
 io.dropwizard.cassandra.CassandraFactory
+io.dropwizard.cassandra.options.CassandraOption

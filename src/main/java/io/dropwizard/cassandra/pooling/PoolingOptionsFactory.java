@@ -62,11 +62,11 @@ public class PoolingOptionsFactory implements DropwizardCassandraConfigBuilder {
         this.connectionConnectTimeout = connectionConnectTimeout;
     }
 
-    public void build(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+    public void accept(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
         builder.withNullSafeInteger(DefaultDriverOption.CONNECTION_MAX_REQUESTS, maxRequestsPerConnection)
                 .withNullSafeInteger(DefaultDriverOption.CONNECTION_POOL_LOCAL_SIZE, maxLocalConnections)
                 .withNullSafeInteger(DefaultDriverOption.CONNECTION_POOL_REMOTE_SIZE, maxRemoteConnections)
-                .withNullSafeLong(DefaultDriverOption.HEARTBEAT_INTERVAL, heartbeatInterval.toSeconds())
-                .withNullSafeLong(DefaultDriverOption.CONNECTION_CONNECT_TIMEOUT, connectionConnectTimeout.toSeconds());
+                .withNullSafeDuration(DefaultDriverOption.HEARTBEAT_INTERVAL, heartbeatInterval)
+                .withNullSafeDuration(DefaultDriverOption.CONNECTION_CONNECT_TIMEOUT, connectionConnectTimeout);
     }
 }

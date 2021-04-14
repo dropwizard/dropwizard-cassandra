@@ -38,7 +38,7 @@ public class AtomicMonotonicTimestampGeneratorFactoryTest {
                 .toURI());
         final TimestampGeneratorFactory factory = this.factory.build(yml);
         assertThat(factory, instanceOf(AtomicMonotonicTimestampGeneratorFactory.class));
-        factory.build(builder);
+        factory.accept(builder);
         assertEquals(builder.build().getInitialConfig().getDefaultProfile()
                         .getString(DefaultDriverOption.TIMESTAMP_GENERATOR_CLASS),
                 AtomicTimestampGenerator.class.getName());
@@ -48,7 +48,7 @@ public class AtomicMonotonicTimestampGeneratorFactoryTest {
     public void buildsTimestampGenerator() throws Exception {
         final TimestampGeneratorFactory factory = new AtomicMonotonicTimestampGeneratorFactory();
 
-        factory.build(builder);
+        factory.accept(builder);
         assertEquals(builder.build().getInitialConfig().getDefaultProfile()
                         .getString(DefaultDriverOption.TIMESTAMP_GENERATOR_CLASS),
                 AtomicTimestampGenerator.class.getName());

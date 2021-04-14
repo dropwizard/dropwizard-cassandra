@@ -50,7 +50,7 @@ public class BasicPolicyFactory implements LoadBalancingPolicyFactory {
     }
 
     @Override
-    public void build(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+    public void accept(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
         builder.withClass(DefaultDriverOption.LOAD_BALANCING_POLICY_CLASS, BasicLoadBalancingPolicy.class)
                 .withNullSafeBoolean(DefaultDriverOption.LOAD_BALANCING_DC_FAILOVER_ALLOW_FOR_LOCAL_CONSISTENCY_LEVELS,
                         dataCenterFailoverAllowLocalConsistencyLevels)

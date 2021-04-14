@@ -39,7 +39,7 @@ public class ThreadLocalMonotonicTimestampGeneratorFactoryTest {
                 .toURI());
         final TimestampGeneratorFactory factory = this.factory.build(yml);
         assertThat(factory, instanceOf(ThreadLocalMonotonicTimestampGeneratorFactory.class));
-        factory.build(builder);
+        factory.accept(builder);
         assertEquals(builder.build().getInitialConfig().getDefaultProfile()
                         .getString(DefaultDriverOption.TIMESTAMP_GENERATOR_CLASS),
                 ThreadLocalTimestampGenerator.class.getName());
@@ -49,7 +49,7 @@ public class ThreadLocalMonotonicTimestampGeneratorFactoryTest {
     public void buildsTimestampGenerator() throws Exception {
         final TimestampGeneratorFactory factory = new ThreadLocalMonotonicTimestampGeneratorFactory();
 
-        factory.build(builder);
+        factory.accept(builder);
         assertEquals(builder.build().getInitialConfig().getDefaultProfile()
                         .getString(DefaultDriverOption.TIMESTAMP_GENERATOR_CLASS),
                 ThreadLocalTimestampGenerator.class.getName());

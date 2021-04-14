@@ -2,7 +2,6 @@ package io.dropwizard.cassandra.retry;
 
 import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
 import com.datastax.oss.driver.internal.core.retry.ConsistencyDowngradingRetryPolicy;
-import com.datastax.oss.driver.internal.core.retry.DefaultRetryPolicy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
@@ -38,7 +37,7 @@ public class ConsistencyDowngradingRetryPolicyFactoryTest {
         final File yml = new File(Resources.getResource("smoke/retry/consistency-downgrading.yaml").toURI());
         final RetryPolicyFactory factory = this.factory.build(yml);
         assertThat(factory, instanceOf(ConsistencyDowngradingRetryPolicyFactory.class));
-        factory.build(builder);
+        factory.accept(builder);
         Assertions.assertThat(builder.build().getInitialConfig().getDefaultProfile().getString(DefaultDriverOption.RETRY_POLICY_CLASS))
                 .isEqualTo(ConsistencyDowngradingRetryPolicy.class.getName());
     }

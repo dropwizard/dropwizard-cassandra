@@ -42,7 +42,7 @@ public abstract class LoadBalancingTestHelper<T extends BasicPolicyFactory> {
         assertThat(loadBalancingFactory.getDcFailoverMaxNodesPerRemoteDc()).isEqualTo(2);
 
         DropwizardProgrammaticDriverConfigLoaderBuilder builder = DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
-        loadBalancingFactory.build(builder);
+        loadBalancingFactory.accept(builder);
         DriverExecutionProfile profile = builder.build().getInitialConfig().getDefaultProfile();
 
         assertThat(profile.getString(DefaultDriverOption.LOAD_BALANCING_POLICY_CLASS)).isEqualTo(getLoadBalancingPolicy().getName());

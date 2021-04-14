@@ -9,7 +9,7 @@ import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 public class ConsistencyDowngradingRetryPolicyFactory implements RetryPolicyFactory {
 
     @Override
-    public void build(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+    public void accept(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
         builder.withClass(DefaultDriverOption.RETRY_POLICY_CLASS, ConsistencyDowngradingRetryPolicy.class);
     }
 }

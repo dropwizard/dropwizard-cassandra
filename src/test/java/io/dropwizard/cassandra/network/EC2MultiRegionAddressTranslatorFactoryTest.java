@@ -38,7 +38,7 @@ public class EC2MultiRegionAddressTranslatorFactoryTest {
         final File yaml = new File(Resources.getResource("smoke/network/ec2.yaml").toURI());
         final AddressTranslatorFactory factory = this.factory.build(yaml);
         assertThat(factory).isInstanceOf(EC2MultiRegionAddressTranslatorFactory.class);
-        factory.build(builder);
+        factory.accept(builder);
         assertThat(builder.build().getInitialConfig().getDefaultProfile()
                 .getString(DefaultDriverOption.ADDRESS_TRANSLATOR_CLASS))
                 .isEqualTo(Ec2MultiRegionAddressTranslator.class.getName());

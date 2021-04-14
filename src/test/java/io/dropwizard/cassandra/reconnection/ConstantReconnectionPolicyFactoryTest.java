@@ -39,7 +39,7 @@ public class ConstantReconnectionPolicyFactoryTest {
         final ReconnectionPolicyFactory factory = this.factory.build(yml);
         assertThat(factory, instanceOf(ConstantReconnectionPolicyFactory.class));
         assertThat(((ConstantReconnectionPolicyFactory) factory).getDelay(), is(Duration.minutes(1)));
-        factory.build(builder);
+        factory.accept(builder);
         Assertions.assertThat(builder.build().getInitialConfig().getDefaultProfile()
                         .getString(DefaultDriverOption.RECONNECTION_POLICY_CLASS))
                 .isEqualTo(ConstantReconnectionPolicy.class.getName());
@@ -49,7 +49,7 @@ public class ConstantReconnectionPolicyFactoryTest {
     public void buildsPolicyWithDefaults() {
         final ConstantReconnectionPolicyFactory factory = new ConstantReconnectionPolicyFactory();
 
-        factory.build(builder);
+        factory.accept(builder);
         Assertions.assertThat(builder.build().getInitialConfig().getDefaultProfile()
                         .getString(DefaultDriverOption.RECONNECTION_POLICY_CLASS))
                 .isEqualTo(ConstantReconnectionPolicy.class.getName());

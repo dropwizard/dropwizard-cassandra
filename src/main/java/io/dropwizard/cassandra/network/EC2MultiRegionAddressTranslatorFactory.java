@@ -11,7 +11,7 @@ import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 @JsonTypeName("ec2-multi-region")
 public class EC2MultiRegionAddressTranslatorFactory implements AddressTranslatorFactory {
     @Override
-    public void build(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+    public void accept(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
         builder.withClass(DefaultDriverOption.ADDRESS_TRANSLATOR_CLASS, Ec2MultiRegionAddressTranslator.class);
     }
 }

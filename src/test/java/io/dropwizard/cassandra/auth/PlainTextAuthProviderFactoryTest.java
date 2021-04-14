@@ -41,7 +41,7 @@ public class PlainTextAuthProviderFactoryTest {
         assertThat(authProviderFactory.getUsername()).isEqualTo("admin");
         assertThat(authProviderFactory.getPassword()).isEqualTo("hunter2");
         DropwizardProgrammaticDriverConfigLoaderBuilder builder = DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
-        factory.build(builder);
+        factory.accept(builder);
         assertThat(builder.build().getInitialConfig().getDefaultProfile()
                 .getString(DefaultDriverOption.AUTH_PROVIDER_CLASS)).isEqualTo(PlainTextAuthProvider.class.getName());
         assertThat(builder.build().getInitialConfig().getDefaultProfile()

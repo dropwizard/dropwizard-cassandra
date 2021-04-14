@@ -11,7 +11,7 @@ import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 @JsonTypeName("thread")
 public class ThreadLocalMonotonicTimestampGeneratorFactory implements TimestampGeneratorFactory {
     @Override
-    public void build(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+    public void accept(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
         builder.withClass(DefaultDriverOption.TIMESTAMP_GENERATOR_CLASS, ThreadLocalTimestampGenerator.class);
     }
 }

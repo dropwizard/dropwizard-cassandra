@@ -45,7 +45,7 @@ public class ConstantSpeculativeExecutionPolicyFactoryTest {
         assertThat(speculativeExecutionPolicyFactory.getMaxSpeculativeExecutions()).isEqualTo(3);
 
         DropwizardProgrammaticDriverConfigLoaderBuilder builder = DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
-        factory.build(builder);
+        factory.accept(builder);
         assertEquals(builder.build().getInitialConfig().getDefaultProfile().getString(DefaultDriverOption.SPECULATIVE_EXECUTION_POLICY_CLASS),
                 ConstantSpeculativeExecutionPolicy.class.getName());
         assertEquals(builder.build().getInitialConfig().getDefaultProfile().getInt(DefaultDriverOption.SPECULATIVE_EXECUTION_MAX),
