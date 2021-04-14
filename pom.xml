@@ -76,12 +76,8 @@
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
     <brave.version>5.9.1</brave.version>
-<<<<<<< HEAD
     <dropwizard.version>2.0.21</dropwizard.version>
-=======
->>>>>>> Bump dropwizard-dependencies from 2.0.20 to 2.0.21 (#56)
     <cassandra-driver.version>4.11.0</cassandra-driver.version>
-    <dropwizard.version>2.0.21</dropwizard.version>
     <cassandra-brave.version>0.11.1</cassandra-brave.version>
   </properties>
 
