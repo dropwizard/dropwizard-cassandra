@@ -1,0 +1,15 @@
+io.dropwizard.cassandra.options.BooleanCassandraOption
+io.dropwizard.cassandra.options.BooleanListCassandraOption
+io.dropwizard.cassandra.options.IntegerCassandraOption
+io.dropwizard.cassandra.options.IntegerListCassandraOption
+io.dropwizard.cassandra.options.LongCassandraOption
+io.dropwizard.cassandra.options.LongListCassandraOption
+io.dropwizard.cassandra.options.DoubleCassandraOption
+io.dropwizard.cassandra.options.DoubleListCassandraOption
+io.dropwizard.cassandra.options.BytesCassandraOption
+io.dropwizard.cassandra.options.BytesListCassandraOption
+io.dropwizard.cassandra.options.ClassCassandraOption
+io.dropwizard.cassandra.options.DurationCassandraOption
+io.dropwizard.cassandra.options.DurationListCassandraOption
+io.dropwizard.cassandra.options.StringCassandraOption
+io.dropwizard.cassandra.options.StringListCassandraOption

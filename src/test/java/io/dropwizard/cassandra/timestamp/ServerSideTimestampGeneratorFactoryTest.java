@@ -39,7 +39,7 @@ public class ServerSideTimestampGeneratorFactoryTest {
                 .toURI());
         final TimestampGeneratorFactory factory = this.factory.build(yml);
         assertThat(factory, instanceOf(ServerSideTimestampGeneratorFactory.class));
-        factory.build(builder);
+        factory.accept(builder);
         assertEquals(builder.build().getInitialConfig().getDefaultProfile()
                         .getString(DefaultDriverOption.TIMESTAMP_GENERATOR_CLASS),
                 ServerSideTimestampGenerator.class.getName());
@@ -49,7 +49,7 @@ public class ServerSideTimestampGeneratorFactoryTest {
     public void buildsTimestampGenerator() throws Exception {
         final TimestampGeneratorFactory factory = new ServerSideTimestampGeneratorFactory();
 
-        factory.build(builder);
+        factory.accept(builder);
         assertEquals(builder.build().getInitialConfig().getDefaultProfile()
                         .getString(DefaultDriverOption.TIMESTAMP_GENERATOR_CLASS),
                 ServerSideTimestampGenerator.class.getName());

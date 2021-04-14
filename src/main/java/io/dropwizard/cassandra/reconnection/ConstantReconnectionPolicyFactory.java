@@ -28,8 +28,8 @@ public class ConstantReconnectionPolicyFactory implements ReconnectionPolicyFact
     }
 
     @Override
-    public void build(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+    public void accept(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
         builder.withClass(DefaultDriverOption.RECONNECTION_POLICY_CLASS, ConstantReconnectionPolicy.class);
-        builder.withLong(DefaultDriverOption.RECONNECTION_BASE_DELAY, getDelay().toMilliseconds());
+        builder.withNullSafeDuration(DefaultDriverOption.RECONNECTION_BASE_DELAY, getDelay());
     }
 }

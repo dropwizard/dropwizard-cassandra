@@ -39,7 +39,7 @@ public class NoSpeculativeExecutionPolicyFactoryTest {
         final SpeculativeExecutionPolicyFactory factory = this.factory.build(yaml);
         assertThat(factory).isInstanceOf(NoSpeculativeExecutionPolicyFactory.class);
         DropwizardProgrammaticDriverConfigLoaderBuilder builder = DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
-        factory.build(builder);
+        factory.accept(builder);
         assertEquals(builder.build().getInitialConfig().getDefaultProfile().getString(DefaultDriverOption.SPECULATIVE_EXECUTION_POLICY_CLASS),
                 NoSpeculativeExecutionPolicy.class.getName());
     }

@@ -34,7 +34,7 @@ public class PlainTextAuthProviderFactory implements AuthProviderFactory {
     }
 
     @Override
-    public void build(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+    public void accept(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
         builder.withClass(DefaultDriverOption.AUTH_PROVIDER_CLASS, PlainTextAuthProvider.class)
                 .withString(DefaultDriverOption.AUTH_PROVIDER_USER_NAME, username)
                 .withString(DefaultDriverOption.AUTH_PROVIDER_PASSWORD, password);

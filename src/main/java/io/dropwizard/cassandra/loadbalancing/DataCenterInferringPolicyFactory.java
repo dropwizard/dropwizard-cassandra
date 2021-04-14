@@ -9,8 +9,8 @@ import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 public class DataCenterInferringPolicyFactory extends BasicPolicyFactory {
 
     @Override
-    public void build(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
-        super.build(builder);
+    public void accept(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+        super.accept(builder);
         builder.withClass(DefaultDriverOption.LOAD_BALANCING_POLICY_CLASS, DcInferringLoadBalancingPolicy.class);
     }
 }

@@ -39,13 +39,13 @@ public class PoolingOptionsFactoryTest {
         assertThat(factory.getConnectionConnectTimeout()).isEqualTo(Duration.seconds(10));
 
         DropwizardProgrammaticDriverConfigLoaderBuilder builder = DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
-        factory.build(builder);
+        factory.accept(builder);
         DriverExecutionProfile profile = builder.build().getInitialConfig().getDefaultProfile();
 
         assertThat(profile.getInt(DefaultDriverOption.CONNECTION_MAX_REQUESTS)).isEqualTo(5);
         assertThat(profile.getInt(DefaultDriverOption.CONNECTION_POOL_LOCAL_SIZE)).isEqualTo(20);
         assertThat(profile.getInt(DefaultDriverOption.CONNECTION_POOL_REMOTE_SIZE)).isEqualTo(10);
-        assertThat(profile.getInt(DefaultDriverOption.HEARTBEAT_INTERVAL)).isEqualTo(5);
-        assertThat(profile.getInt(DefaultDriverOption.CONNECTION_CONNECT_TIMEOUT)).isEqualTo(10);
+        assertThat(profile.getInt(DefaultDriverOption.HEARTBEAT_INTERVAL)).isEqualTo(5000);
+        assertThat(profile.getInt(DefaultDriverOption.CONNECTION_CONNECT_TIMEOUT)).isEqualTo(10000);
     }
 }

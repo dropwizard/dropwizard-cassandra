@@ -17,9 +17,11 @@ import io.dropwizard.cassandra.loadbalancing.LoadBalancingPolicyFactory;
 import io.dropwizard.cassandra.managed.CassandraManager;
 import io.dropwizard.cassandra.metrics.CassandraMetricRegistryListener;
 import io.dropwizard.cassandra.network.AddressTranslatorFactory;
+import io.dropwizard.cassandra.options.CassandraOption;
 import io.dropwizard.cassandra.pooling.PoolingOptionsFactory;
 import io.dropwizard.cassandra.reconnection.ExponentialReconnectionPolicyFactory;
 import io.dropwizard.cassandra.reconnection.ReconnectionPolicyFactory;
+import io.dropwizard.cassandra.request.RequestOptionsFactory;
 import io.dropwizard.cassandra.retry.RetryPolicyFactory;
 import io.dropwizard.cassandra.speculativeexecution.SpeculativeExecutionPolicyFactory;
 import io.dropwizard.cassandra.ssl.SSLOptionsFactory;
@@ -28,18 +30,23 @@ import io.dropwizard.cassandra.timestamp.TimestampGeneratorFactory;
 import io.dropwizard.jackson.Discoverable;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import io.dropwizard.util.Duration;
-import io.dropwizard.validation.MaxDuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 public abstract class CassandraFactory implements Discoverable {
     private static final Logger log = LoggerFactory.getLogger(CassandraFactory.class);
+    @JsonProperty
+    protected String sessionName;
+    @JsonProperty
+    protected String sessionKeyspaceName;
+    @JsonProperty
+    protected RequestOptionsFactory requestOptionsFactory;
     @JsonProperty
     protected boolean metricsEnabled = true;
     @NotNull
@@ -82,15 +89,44 @@ public abstract class CassandraFactory implements Discoverable {
     @Valid
     @JsonProperty
     protected ReconnectionPolicyFactory reconnectionPolicyFactory = new ExponentialReconnectionPolicyFactory();
-    @MaxDuration(value = Integer.MAX_VALUE)
     @Valid
     @NotNull
     @JsonProperty
     protected LoadBalancingPolicyFactory loadBalancingPolicy;
-
-    @NotNull
     @JsonProperty
-    protected Double reconnectionThreshold = 0.5d;
+    protected List<CassandraOption> cassandraOptions;
+
+    public String getSessionName() {
+        return sessionName;
+    }
+
+    public void setSessionName(String sessionName) {
+        this.sessionName = sessionName;
+    }
+
+    public String getSessionKeyspaceName() {
+        return sessionKeyspaceName;
+    }
+
+    public void setSessionKeyspaceName(String sessionKeyspaceName) {
+        this.sessionKeyspaceName = sessionKeyspaceName;
+    }
+
+    public RequestOptionsFactory getRequestOptionsFactory() {
+        return requestOptionsFactory;
+    }
+
+    public void setRequestOptionsFactory(RequestOptionsFactory requestOptionsFactory) {
+        this.requestOptionsFactory = requestOptionsFactory;
+    }
+
+    public List<CassandraOption> getCassandraOptions() {
+        return cassandraOptions;
+    }
+
+    public void setCassandraOptions(List<CassandraOption> cassandraOptions) {
+        this.cassandraOptions = cassandraOptions;
+    }
 
     public boolean isMetricsEnabled() {
         return metricsEnabled;
@@ -212,14 +248,6 @@ public abstract class CassandraFactory implements Discoverable {
         this.loadBalancingPolicy = loadBalancingPolicy;
     }
 
-    public Double getReconnectionThreshold() {
-        return reconnectionThreshold;
-    }
-
-    public void setReconnectionThreshold(final Double reconnectionThreshold) {
-        this.reconnectionThreshold = reconnectionThreshold;
-    }
-
     protected CqlSessionBuilder setUpClusterBuilder(final MetricRegistry metrics) {
         CqlSessionBuilder builder = CqlSession.builder();
         if (metricsEnabled) {
@@ -229,7 +257,6 @@ public abstract class CassandraFactory implements Discoverable {
     }
 
     protected DriverConfigLoader getConfig(final MetricRegistry metrics) {
-
         DropwizardProgrammaticDriverConfigLoaderBuilder configLoaderBuilder =
                 DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
 
@@ -244,6 +271,12 @@ public abstract class CassandraFactory implements Discoverable {
                 .configBuilderHelper(poolingOptions, configLoaderBuilder)
                 .configBuilderHelper(addressTranslator, configLoaderBuilder);
 
+        if (Objects.nonNull(cassandraOptions)) {
+            cassandraOptions.forEach(opt -> opt.accept(configLoaderBuilder));
+        }
+
+        configLoaderBuilder.withNullSafeString(DefaultDriverOption.SESSION_NAME, getSessionName());
+        configLoaderBuilder.withNullSafeString(DefaultDriverOption.SESSION_KEYSPACE, getSessionKeyspaceName());
         addAdditionalBuilderOptions(configLoaderBuilder, metrics);
         return configLoaderBuilder.build();
     }
@@ -283,7 +316,7 @@ public abstract class CassandraFactory implements Discoverable {
     protected CassandraFactory configBuilderHelper(DropwizardCassandraConfigBuilder dropwizardCassandraConfigBuilder,
                                                    DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
         if (Objects.nonNull(dropwizardCassandraConfigBuilder)) {
-            dropwizardCassandraConfigBuilder.build(builder);
+            dropwizardCassandraConfigBuilder.accept(builder);
         }
         return this;
     }

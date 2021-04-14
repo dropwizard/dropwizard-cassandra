@@ -39,7 +39,7 @@ public class DefaultRetryPolicyFactoryTest {
         final RetryPolicyFactory factory = this.factory.build(yaml);
         assertThat(factory).isInstanceOf(DefaultRetryPolicyFactory.class);
         DropwizardProgrammaticDriverConfigLoaderBuilder builder = DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
-        factory.build(builder);
+        factory.accept(builder);
         assertThat(builder.build().getInitialConfig().getDefaultProfile().getString(DefaultDriverOption.RETRY_POLICY_CLASS))
                 .isEqualTo(DefaultRetryPolicy.class.getName());
     }

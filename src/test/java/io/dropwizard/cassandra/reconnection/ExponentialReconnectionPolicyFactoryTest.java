@@ -40,7 +40,7 @@ public class ExponentialReconnectionPolicyFactoryTest {
         assertThat(factory, instanceOf(ExponentialReconnectionPolicyFactory.class));
         assertThat(((ExponentialReconnectionPolicyFactory) factory).getBaseConnectionDelay(), is(Duration.seconds(10)));
         assertThat(((ExponentialReconnectionPolicyFactory) factory).getMaxReconnectionDelay(), is(Duration.seconds(30)));
-        factory.build(builder);
+        factory.accept(builder);
         Assertions.assertThat(builder.build().getInitialConfig().getDefaultProfile()
                         .getString(DefaultDriverOption.RECONNECTION_POLICY_CLASS))
                 .isEqualTo(ExponentialReconnectionPolicy.class.getName());
@@ -49,7 +49,7 @@ public class ExponentialReconnectionPolicyFactoryTest {
     @Test
     public void buildsPolicyWithDefaults() {
         final ExponentialReconnectionPolicyFactory factory = new ExponentialReconnectionPolicyFactory();
-        factory.build(builder);
+        factory.accept(builder);
         Assertions.assertThat(builder.build().getInitialConfig().getDefaultProfile()
                         .getString(DefaultDriverOption.RECONNECTION_POLICY_CLASS))
                 .isEqualTo(ExponentialReconnectionPolicy.class.getName());

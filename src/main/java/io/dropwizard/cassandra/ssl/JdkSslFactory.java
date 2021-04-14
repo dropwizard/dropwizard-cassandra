@@ -8,7 +8,7 @@ import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 @JsonTypeName("jdk")
 public class JdkSslFactory implements SSLOptionsFactory {
     @Override
-    public void build(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+    public void accept(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
         builder.withClass(DefaultDriverOption.SSL_ENGINE_FACTORY_CLASS, JdkSslHandlerFactory.class);
     }
 }

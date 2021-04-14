@@ -8,7 +8,7 @@ import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 @JsonTypeName("default")
 public class DefaultRetryPolicyFactory implements RetryPolicyFactory {
     @Override
-    public void build(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+    public void accept(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
         builder.withClass(DefaultDriverOption.RETRY_POLICY_CLASS, DefaultRetryPolicy.class);
     }
 }

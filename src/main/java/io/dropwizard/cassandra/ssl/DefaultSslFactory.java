@@ -72,7 +72,7 @@ public class DefaultSslFactory implements SSLOptionsFactory {
     }
 
     @Override
-    public void build(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+    public void accept(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
         builder.withClass(DefaultDriverOption.SSL_ENGINE_FACTORY_CLASS, DefaultSslEngineFactory.class)
                 .withNullSafeStringList(DefaultDriverOption.SSL_CIPHER_SUITES, cipherSuites)
                 .withNullSafeBoolean(DefaultDriverOption.SSL_HOSTNAME_VALIDATION, hostValidation)

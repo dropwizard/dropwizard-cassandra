@@ -40,18 +40,77 @@ compile "io.dropwizard.modules:dropwizard-cassandra:2.0.0"
 
 ### Usage
 
-Minimal example configuration:
+##### Minimal
 ```
 cassandra:
   type: basic
-  name: cassandra.test-cluster
-  clusterName: test-cluster
   contactPoints:
-    - localhost
-  connectionString: localhost
-  port: 9042
+    - host: localhost
+      port: 9041
   loadBalancingPolicy:
-    type: roundRobin
+    type: default
+```
+
+#### Comprehensive
+```
+cassandra:
+  type: basic
+  sessionName: name
+  sessionKeyspaceName: keyspace
+  requestOptionsFactory:
+    requestTimeout:5s
+    requestConsistency: local
+    requestPageSize: 12
+    requestSerialConsistency: local
+    requestDefaultIdempotence: true
+  metricsEnabled: true
+  protocolVersion: DEFAULT
+  ssl:
+    type: default
+    cipherSuites: ["a", "b"]
+    hostValidation: true
+    keyStorePassword: keyStorePassword
+    keyStorePath: keyStorePath
+    trustStorePassword: trustStorePassword
+    trustStorePath: trustStorePath
+  compression: lz4
+  contactPoints:
+    - host: localhost
+      port: 9041
+  authProvider:
+    type: plain-text
+    username: admin
+    password: hunter2
+  retryPolicy:
+    type: default
+  speculativeExecutionPolicy:
+    type: constant
+    delay: 1s
+    maxSpeculativeExecutions: 3
+  poolingOptions:
+    maxRequestsPerConnection: 5
+    maxRemoteConnections: 10
+    maxLocalConnections: 20
+    heartbeatInterval: 5s
+    connectionConnectTimeout: 10s
+  addressTranslator:
+    type: ec2-multi-region
+  timestampGenerator:
+    type: atomic
+  reconnectionPolicyFactory:
+    type: exponential
+    baseConnectionDelay: 10s
+    maxReconnectionDelay: 30s
+  loadBalancingPolicy:
+    type: default
+    localDataCenter: local
+    dataCenterFailoverAllowLocalConsistencyLevels: true
+    slowAvoidance: true
+    dcFailoverMaxNodesPerRemoteDc: 2
+  cassandraOptions: # to add options which are not supported by default. Full list can be found at https://docs.datastax.com/en/developer/java-driver/4.11/manual/core/
+    - type: long
+      name: advanced.protocol.max-frame-length
+      value: 12
 ```
 
 ### Acknowledgements

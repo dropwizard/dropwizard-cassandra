@@ -38,7 +38,7 @@ public class SniSslFactoryTest {
         final SSLOptionsFactory factory = this.factory.build(yaml);
         assertThat(factory).isInstanceOf(SniSslFactory.class);
         DropwizardProgrammaticDriverConfigLoaderBuilder builder = DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
-        factory.build(builder);
+        factory.accept(builder);
         DriverExecutionProfile profile = builder.build().getInitialConfig().getDefaultProfile();
 
         assertThat(profile.getString(DefaultDriverOption.SSL_ENGINE_FACTORY_CLASS))

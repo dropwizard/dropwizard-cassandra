@@ -31,6 +31,11 @@ public class DropwizardProgrammaticDriverConfigLoaderBuilder implements Programm
         return nullSafSet(builder::withStringList, option, val);
     }
 
+    public DropwizardProgrammaticDriverConfigLoaderBuilder withNullSafeDuration(DefaultDriverOption option,
+                                                                                io.dropwizard.util.Duration val) {
+        return nullSafSet((opt, dur) -> builder.withDuration(opt, Duration.ofMillis(val.toMilliseconds())), option, val);
+    }
+
     public DropwizardProgrammaticDriverConfigLoaderBuilder withNullSafeInteger(DefaultDriverOption option, Integer val) {
         return nullSafSet(builder::withInt, option, val);
     }
@@ -59,7 +64,7 @@ public class DropwizardProgrammaticDriverConfigLoaderBuilder implements Programm
     }
 
     private <T> DropwizardProgrammaticDriverConfigLoaderBuilder nullSafSet(BiConsumer<DefaultDriverOption, T> consumer,
-                                                                          DefaultDriverOption option, T val) {
+                                                                           DefaultDriverOption option, T val) {
         if (Objects.nonNull(val)) {
             consumer.accept(option, val);
         }

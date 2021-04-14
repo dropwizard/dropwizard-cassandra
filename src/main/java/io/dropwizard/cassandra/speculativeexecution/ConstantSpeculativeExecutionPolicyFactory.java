@@ -38,9 +38,9 @@ public class ConstantSpeculativeExecutionPolicyFactory implements SpeculativeExe
     }
 
     @Override
-    public void build(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+    public void accept(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
         builder.withClass(DefaultDriverOption.SPECULATIVE_EXECUTION_POLICY_CLASS, ConstantSpeculativeExecutionPolicy.class)
                 .withInt(DefaultDriverOption.SPECULATIVE_EXECUTION_MAX, maxSpeculativeExecutions)
-                .withLong(DefaultDriverOption.SPECULATIVE_EXECUTION_DELAY, delay.toMilliseconds());
+                .withNullSafeDuration(DefaultDriverOption.SPECULATIVE_EXECUTION_DELAY, delay);
     }
 }

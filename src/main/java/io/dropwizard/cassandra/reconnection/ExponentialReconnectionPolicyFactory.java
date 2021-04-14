@@ -40,9 +40,9 @@ public class ExponentialReconnectionPolicyFactory implements ReconnectionPolicyF
     }
 
     @Override
-    public void build(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+    public void accept(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
         builder.withClass(DefaultDriverOption.RECONNECTION_POLICY_CLASS, ExponentialReconnectionPolicy.class)
-                .withLong(DefaultDriverOption.RECONNECTION_BASE_DELAY, getBaseConnectionDelay().toMilliseconds())
-                .withLong(DefaultDriverOption.RECONNECTION_MAX_DELAY, getMaxReconnectionDelay().toMilliseconds());
+                .withNullSafeDuration(DefaultDriverOption.RECONNECTION_BASE_DELAY, getBaseConnectionDelay())
+                .withNullSafeDuration(DefaultDriverOption.RECONNECTION_MAX_DELAY, getMaxReconnectionDelay());
     }
 }
