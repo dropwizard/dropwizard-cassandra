@@ -34,6 +34,12 @@ public class CassandraManager implements Managed {
             future.toCompletableFuture().get(shutdownGracePeriod.toMilliseconds(), TimeUnit.MILLISECONDS);
         } catch (TimeoutException e) {
             log.warn("Cassandra cluster did not close in gracePeriod={}.", shutdownGracePeriod);
+            try {
+                session.forceCloseAsync().toCompletableFuture()
+                        .get(shutdownGracePeriod.toMilliseconds(), TimeUnit.MILLISECONDS);
+            } catch (TimeoutException te) {
+                log.warn("Force closing Cassandra cluster did not happen in gracePeriod={}.", shutdownGracePeriod);
+            }
         }
     }
 }
