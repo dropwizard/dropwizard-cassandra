@@ -1,9 +1,10 @@
 package io.dropwizard.cassandra.reconnection;
 
-import com.datastax.driver.core.policies.ExponentialReconnectionPolicy;
-import com.datastax.driver.core.policies.ReconnectionPolicy;
+import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
+import com.datastax.oss.driver.internal.core.connection.ExponentialReconnectionPolicy;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 import io.dropwizard.util.Duration;
 import io.dropwizard.validation.MaxDuration;
 
@@ -39,7 +40,9 @@ public class ExponentialReconnectionPolicyFactory implements ReconnectionPolicyF
     }
 
     @Override
-    public ReconnectionPolicy build() {
-        return new ExponentialReconnectionPolicy(getBaseConnectionDelay().toMilliseconds(), getMaxReconnectionDelay().toMilliseconds());
+    public void accept(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+        builder.withClass(DefaultDriverOption.RECONNECTION_POLICY_CLASS, ExponentialReconnectionPolicy.class)
+                .withNullSafeDuration(DefaultDriverOption.RECONNECTION_BASE_DELAY, getBaseConnectionDelay())
+                .withNullSafeDuration(DefaultDriverOption.RECONNECTION_MAX_DELAY, getMaxReconnectionDelay());
     }
 }

@@ -1,8 +1,10 @@
 package io.dropwizard.cassandra.auth;
 
-import com.datastax.driver.core.PlainTextAuthProvider;
+import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
+import com.datastax.oss.driver.internal.core.auth.PlainTextAuthProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
+import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 import io.dropwizard.configuration.ConfigurationException;
 import io.dropwizard.configuration.YamlConfigurationFactory;
 import io.dropwizard.jackson.DiscoverableSubtypeResolver;
@@ -38,7 +40,13 @@ public class PlainTextAuthProviderFactoryTest {
         final PlainTextAuthProviderFactory authProviderFactory = (PlainTextAuthProviderFactory) factory;
         assertThat(authProviderFactory.getUsername()).isEqualTo("admin");
         assertThat(authProviderFactory.getPassword()).isEqualTo("hunter2");
-
-        assertThat(factory.build()).isInstanceOf(PlainTextAuthProvider.class);
+        DropwizardProgrammaticDriverConfigLoaderBuilder builder = DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
+        factory.accept(builder);
+        assertThat(builder.build().getInitialConfig().getDefaultProfile()
+                .getString(DefaultDriverOption.AUTH_PROVIDER_CLASS)).isEqualTo(PlainTextAuthProvider.class.getName());
+        assertThat(builder.build().getInitialConfig().getDefaultProfile()
+                .getString(DefaultDriverOption.AUTH_PROVIDER_USER_NAME)).isEqualTo("admin");
+        assertThat(builder.build().getInitialConfig().getDefaultProfile()
+                .getString(DefaultDriverOption.AUTH_PROVIDER_PASSWORD)).isEqualTo("hunter2");
     }
 }

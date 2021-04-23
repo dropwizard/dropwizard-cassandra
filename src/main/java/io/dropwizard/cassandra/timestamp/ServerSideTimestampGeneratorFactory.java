@@ -1,8 +1,9 @@
 package io.dropwizard.cassandra.timestamp;
 
-import com.datastax.driver.core.ServerSideTimestampGenerator;
-import com.datastax.driver.core.TimestampGenerator;
+import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
+import com.datastax.oss.driver.internal.core.time.ServerSideTimestampGenerator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 
 /**
  ** A factory for configuring and building {@link ServerSideTimestampGenerator} instances.
@@ -10,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonTypeName("server")
 public class ServerSideTimestampGeneratorFactory implements TimestampGeneratorFactory {
     @Override
-    public TimestampGenerator build() {
-        return ServerSideTimestampGenerator.INSTANCE;
+    public void accept(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+        builder.withClass(DefaultDriverOption.TIMESTAMP_GENERATOR_CLASS, ServerSideTimestampGenerator.class);
     }
 }

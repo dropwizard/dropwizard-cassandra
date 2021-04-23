@@ -1,13 +1,14 @@
 package io.dropwizard.cassandra.auth;
 
-import com.datastax.driver.core.AuthProvider;
-import com.datastax.driver.core.PlainTextAuthProvider;
+import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
+import com.datastax.oss.driver.internal.core.auth.PlainTextAuthProvider;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 
 import javax.validation.constraints.NotNull;
 
-@JsonTypeName("plainText")
+@JsonTypeName("plain-text")
 public class PlainTextAuthProviderFactory implements AuthProviderFactory {
     @NotNull
     @JsonProperty
@@ -33,7 +34,9 @@ public class PlainTextAuthProviderFactory implements AuthProviderFactory {
     }
 
     @Override
-    public AuthProvider build() {
-        return new PlainTextAuthProvider(username, password);
+    public void accept(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+        builder.withClass(DefaultDriverOption.AUTH_PROVIDER_CLASS, PlainTextAuthProvider.class)
+                .withString(DefaultDriverOption.AUTH_PROVIDER_USER_NAME, username)
+                .withString(DefaultDriverOption.AUTH_PROVIDER_PASSWORD, password);
     }
 }

@@ -1,28 +1,50 @@
 package io.dropwizard.cassandra.pooling;
 
-import com.datastax.driver.core.HostDistance;
-import com.datastax.driver.core.PoolingOptions;
+import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dropwizard.cassandra.DropwizardCassandraConfigBuilder;
+import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 import io.dropwizard.util.Duration;
 
 import javax.validation.Valid;
 
-public class PoolingOptionsFactory {
+public class PoolingOptionsFactory implements DropwizardCassandraConfigBuilder {
+    @JsonProperty
+    private Integer maxRequestsPerConnection;
+    @JsonProperty
+    private Integer maxRemoteConnections;
+    @JsonProperty
+    private Integer maxLocalConnections;
     @Valid
     @JsonProperty
     private Duration heartbeatInterval;
     @Valid
     @JsonProperty
-    private Duration poolTimeout;
-    @Valid
-    @JsonProperty
-    private Duration idleTimeout;
-    @Valid
-    @JsonProperty
-    private HostDistanceOptions remote;
-    @Valid
-    @JsonProperty
-    private HostDistanceOptions local;
+    private Duration connectionConnectTimeout;
+
+    public Integer getMaxRequestsPerConnection() {
+        return maxRequestsPerConnection;
+    }
+
+    public void setMaxRequestsPerConnection(Integer maxRequestsPerConnection) {
+        this.maxRequestsPerConnection = maxRequestsPerConnection;
+    }
+
+    public Integer getMaxRemoteConnections() {
+        return maxRemoteConnections;
+    }
+
+    public void setMaxRemoteConnections(Integer maxRemoteConnections) {
+        this.maxRemoteConnections = maxRemoteConnections;
+    }
+
+    public Integer getMaxLocalConnections() {
+        return maxLocalConnections;
+    }
+
+    public void setMaxLocalConnections(Integer maxLocalConnections) {
+        this.maxLocalConnections = maxLocalConnections;
+    }
 
     public Duration getHeartbeatInterval() {
         return heartbeatInterval;
@@ -32,71 +54,19 @@ public class PoolingOptionsFactory {
         this.heartbeatInterval = heartbeatInterval;
     }
 
-    public Duration getPoolTimeout() {
-        return poolTimeout;
+    public Duration getConnectionConnectTimeout() {
+        return connectionConnectTimeout;
     }
 
-    public void setPoolTimeout(Duration poolTimeout) {
-        this.poolTimeout = poolTimeout;
+    public void setConnectionConnectTimeout(Duration connectionConnectTimeout) {
+        this.connectionConnectTimeout = connectionConnectTimeout;
     }
 
-    public Duration getIdleTimeout() {
-        return idleTimeout;
+    public void accept(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+        builder.withNullSafeInteger(DefaultDriverOption.CONNECTION_MAX_REQUESTS, maxRequestsPerConnection)
+                .withNullSafeInteger(DefaultDriverOption.CONNECTION_POOL_LOCAL_SIZE, maxLocalConnections)
+                .withNullSafeInteger(DefaultDriverOption.CONNECTION_POOL_REMOTE_SIZE, maxRemoteConnections)
+                .withNullSafeDuration(DefaultDriverOption.HEARTBEAT_INTERVAL, heartbeatInterval)
+                .withNullSafeDuration(DefaultDriverOption.CONNECTION_CONNECT_TIMEOUT, connectionConnectTimeout);
     }
-
-    public void setIdleTimeout(Duration idleTimeout) {
-        this.idleTimeout = idleTimeout;
-    }
-
-    public HostDistanceOptions getRemote() {
-        return remote;
-    }
-
-    public void setRemote(HostDistanceOptions remote) {
-        this.remote = remote;
-    }
-
-    public HostDistanceOptions getLocal() {
-        return local;
-    }
-
-    public void setLocal(HostDistanceOptions local) {
-        this.local = local;
-    }
-
-    public PoolingOptions build() {
-        final PoolingOptions poolingOptions = new PoolingOptions();
-        if (local != null) {
-            setPoolingOptions(poolingOptions, HostDistance.LOCAL, local);
-        }
-        if (remote != null) {
-            setPoolingOptions(poolingOptions, HostDistance.REMOTE, remote);
-        }
-        if (heartbeatInterval != null) {
-            poolingOptions.setHeartbeatIntervalSeconds((int) heartbeatInterval.toSeconds());
-        }
-        if (poolTimeout != null) {
-            poolingOptions.setPoolTimeoutMillis((int) poolTimeout.toMilliseconds());
-        }
-        if (idleTimeout != null) {
-            poolingOptions.setIdleTimeoutSeconds((int) idleTimeout.toSeconds());
-        }
-        return poolingOptions;
-    }
-
-    private void setPoolingOptions(final PoolingOptions poolingOptions, final HostDistance hostDistance, final HostDistanceOptions options) {
-        if (options.getCoreConnections() != null) {
-            poolingOptions.setCoreConnectionsPerHost(hostDistance, options.getCoreConnections());
-        }
-        if (options.getMaxConnections() != null) {
-            poolingOptions.setMaxConnectionsPerHost(hostDistance, options.getMaxConnections());
-        }
-        if (options.getMaxRequestsPerConnection() != null) {
-            poolingOptions.setMaxRequestsPerConnection(hostDistance, options.getMaxRequestsPerConnection());
-        }
-        if (options.getNewConnectionThreshold() != null) {
-            poolingOptions.setNewConnectionThreshold(hostDistance, options.getNewConnectionThreshold());
-        }
-    }
-
 }

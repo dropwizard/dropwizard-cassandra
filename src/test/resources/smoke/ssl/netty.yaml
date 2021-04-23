@@ -1,6 +1,0 @@
-type: netty
-provider: JDK
-ciphers: ["cipher"]
-clientAuth: NONE
-sessionCacheSize: 5
-sessionTimeout: 5s

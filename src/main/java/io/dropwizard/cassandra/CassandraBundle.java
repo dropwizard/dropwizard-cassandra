@@ -1,7 +1,7 @@
 package io.dropwizard.cassandra;
 
 import brave.Tracing;
-import com.datastax.driver.core.Session;
+import com.datastax.oss.driver.api.core.CqlSession;
 import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.setup.Bootstrap;
@@ -13,7 +13,7 @@ import static java.util.Objects.requireNonNull;
 
 public abstract class CassandraBundle<T extends Configuration> implements ConfiguredBundle<T>, CassandraConfiguration<T> {
     @Nullable
-    private Session session;
+    private CqlSession session;
 
     @Override
     public void initialize(final Bootstrap<?> bootstrap) {
@@ -31,7 +31,7 @@ public abstract class CassandraBundle<T extends Configuration> implements Config
 
     public abstract CassandraFactory getCassandraFactory(T configuration);
 
-    public Session getSession() {
+    public CqlSession getSession() {
         return requireNonNull(session);
     }
 }

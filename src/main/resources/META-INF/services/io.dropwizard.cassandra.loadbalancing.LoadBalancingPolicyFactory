@@ -1,6 +1,3 @@
-io.dropwizard.cassandra.loadbalancing.DCAwareRoundRobinPolicyFactory
-io.dropwizard.cassandra.loadbalancing.ErrorAwarePolicyFactory
-io.dropwizard.cassandra.loadbalancing.LatencyAwarePolicyFactory
-io.dropwizard.cassandra.loadbalancing.RoundRobinPolicyFactory
-io.dropwizard.cassandra.loadbalancing.TokenAwarePolicyFactory
-io.dropwizard.cassandra.loadbalancing.WhiteListPolicyFactory
+io.dropwizard.cassandra.loadbalancing.DataCenterInferringPolicyFactory
+io.dropwizard.cassandra.loadbalancing.DefaultPolicyFactory
+io.dropwizard.cassandra.loadbalancing.BasicPolicyFactory

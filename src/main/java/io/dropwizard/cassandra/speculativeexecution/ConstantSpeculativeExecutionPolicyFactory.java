@@ -1,9 +1,10 @@
 package io.dropwizard.cassandra.speculativeexecution;
 
-import com.datastax.driver.core.policies.ConstantSpeculativeExecutionPolicy;
-import com.datastax.driver.core.policies.SpeculativeExecutionPolicy;
+import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
+import com.datastax.oss.driver.internal.core.specex.ConstantSpeculativeExecutionPolicy;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 import io.dropwizard.util.Duration;
 
 import javax.validation.constraints.Min;
@@ -37,7 +38,9 @@ public class ConstantSpeculativeExecutionPolicyFactory implements SpeculativeExe
     }
 
     @Override
-    public SpeculativeExecutionPolicy build() {
-        return new ConstantSpeculativeExecutionPolicy(delay.toMilliseconds(), maxSpeculativeExecutions);
+    public void accept(DropwizardProgrammaticDriverConfigLoaderBuilder builder) {
+        builder.withClass(DefaultDriverOption.SPECULATIVE_EXECUTION_POLICY_CLASS, ConstantSpeculativeExecutionPolicy.class)
+                .withInt(DefaultDriverOption.SPECULATIVE_EXECUTION_MAX, maxSpeculativeExecutions)
+                .withNullSafeDuration(DefaultDriverOption.SPECULATIVE_EXECUTION_DELAY, delay);
     }
 }

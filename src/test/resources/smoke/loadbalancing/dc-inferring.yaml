@@ -1,0 +1,5 @@
+type: data-center-inferring
+localDataCenter: local
+dataCenterFailoverAllowLocalConsistencyLevels: true
+slowAvoidance: true
+dcFailoverMaxNodesPerRemoteDc: 2

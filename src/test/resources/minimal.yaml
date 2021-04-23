@@ -1,8 +1,5 @@
 cassandra:
   type: basic
-  name: cassandra.test-cluster
-  clusterName: test-cluster
-  connectionString: localhost
-  port: ${cassandra.port}
+  contactPoints: localhost
   loadBalancingPolicy:
-    type: roundRobin
+    type: basic

@@ -1,0 +1,5 @@
+type: default
+localDataCenter: local
+dataCenterFailoverAllowLocalConsistencyLevels: true
+slowAvoidance: true
+dcFailoverMaxNodesPerRemoteDc: 2

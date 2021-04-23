@@ -1,6 +1,5 @@
 io.dropwizard.cassandra.auth.AuthProviderFactory
 io.dropwizard.cassandra.loadbalancing.LoadBalancingPolicyFactory
-io.dropwizard.cassandra.netty.NettyOptionsFactory
 io.dropwizard.cassandra.network.AddressTranslatorFactory
 io.dropwizard.cassandra.reconnection.ReconnectionPolicyFactory
 io.dropwizard.cassandra.retry.RetryPolicyFactory
@@ -8,3 +7,4 @@ io.dropwizard.cassandra.speculativeexecution.SpeculativeExecutionPolicyFactory
 io.dropwizard.cassandra.ssl.SSLOptionsFactory
 io.dropwizard.cassandra.timestamp.TimestampGeneratorFactory
 io.dropwizard.cassandra.CassandraFactory
+io.dropwizard.cassandra.options.CassandraOption
