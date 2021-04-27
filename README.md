@@ -59,6 +59,7 @@ cassandra:
   loadBalancingPolicy:
     type: default
     localDataCenter: DC1
+
 ```
 
 #### Comprehensive

@@ -152,7 +152,7 @@ public abstract class CassandraFactory implements Discoverable {
     public boolean isMetricsEnabled() {
         return metricsEnabled;
     }
-
+  
     public void setMetricsEnabled(final boolean metricsEnabled) {
         this.metricsEnabled = metricsEnabled;
     }

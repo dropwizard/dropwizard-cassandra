@@ -50,16 +50,10 @@ public class DropwizardCassandraIT {
             e.printStackTrace();
         }
         System.setProperty("cassandra.storagedir", "target/embeddedCassandra/cdc");
-//        System.setProperty("dw.cassandra.contactPoints", "[{\"host\":\"" + EmbeddedCassandraServerHelper.getHost() + "\", " +
-//                "\"port\":\"" + EmbeddedCassandraServerHelper.getNativeTransportPort() + "\"}]");
     }
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-
-//        ConfigOverride.config("cassandra.contactPoints",
-//                "[{\"host\":\"" + EmbeddedCassandraServerHelper.getHost() + "\", " +
-//                        "\"port\":\"" + EmbeddedCassandraServerHelper.getNativeTransportPort() + "\"}]").addToSystemProperties();
         app = new DropwizardTestSupport<>(SmokeTestApp.class, Resources.getResource("minimal.yaml").getPath());
         app.before();
     }
