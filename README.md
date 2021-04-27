@@ -49,6 +49,16 @@ cassandra:
       port: 9041
   loadBalancingPolicy:
     type: default
+    localDataCenter: DC1
+```
+
+```
+cassandra:
+  type: basic
+  contactPoints: [{"host": "localhost", port: "9041"}, {"host": "localhost1", port: "90411"}]
+  loadBalancingPolicy:
+    type: default
+    localDataCenter: DC1
 ```
 
 #### Comprehensive
@@ -111,6 +121,8 @@ cassandra:
     - type: long
       name: advanced.protocol.max-frame-length
       value: 12
+  sessionMetrics: ["continuous-cql-requests"]
+  nodeMetrics: ["bytes-sent"]
 ```
 
 ### Acknowledgements

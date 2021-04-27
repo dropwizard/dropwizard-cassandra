@@ -1,4 +1,5 @@
 io.dropwizard.cassandra.auth.AuthProviderFactory
+io.dropwizard.cassandra.protocolVersion.ProtocolVersionFactory
 io.dropwizard.cassandra.loadbalancing.LoadBalancingPolicyFactory
 io.dropwizard.cassandra.network.AddressTranslatorFactory
 io.dropwizard.cassandra.reconnection.ReconnectionPolicyFactory
