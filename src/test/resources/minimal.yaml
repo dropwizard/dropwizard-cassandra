@@ -9,5 +9,7 @@ cassandra:
   loadBalancingPolicy:
     type: default
     localDataCenter: datacenter1
-  sessionMetrics: [ "continuous-cql-requests" ]
-  nodeMetrics: [ "bytes-sent" ]
+  sessionMetrics:
+    - continuous-cql-requests
+  nodeMetrics:
+    - bytes-sent
