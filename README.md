@@ -52,15 +52,6 @@ cassandra:
     localDataCenter: DC1
 ```
 
-```
-cassandra:
-  type: basic
-  contactPoints: [{"host": "localhost", port: "9041"}, {"host": "localhost1", port: "90411"}]
-  loadBalancingPolicy:
-    type: default
-    localDataCenter: DC1
-```
-
 #### Comprehensive
 ```
 cassandra:
@@ -121,8 +112,19 @@ cassandra:
     - type: long
       name: advanced.protocol.max-frame-length
       value: 12
-  sessionMetrics: ["continuous-cql-requests"]
-  nodeMetrics: ["bytes-sent"]
+  sessionMetrics:
+    - continuous-cql-requests
+  nodeMetrics:
+    - bytes-sent
+```
+
+#### Note
+If you have different contact points per deployment environment your application runs in, it may be easier to avoid having to define multiple YAML files per environment by inserting a placeholder in your YAML file that you then override in each environment (via whatever means you normally override config values, whether that's properties, environment variables, or whatever else), and then override that placeholder with a single entry JSON string defining all contact points, to avoid having to deal with YAML lists.
+
+```
+contactPoints: [${commaSeparatedContactPoints}]
+
+commaSeparatedContactPoints = {"host": "host1", "port": "9142"}, {"host": "host2", "port": "9142"}
 ```
 
 ### Acknowledgements
