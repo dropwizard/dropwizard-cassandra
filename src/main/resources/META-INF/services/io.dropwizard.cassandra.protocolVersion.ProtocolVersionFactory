@@ -1,0 +1,2 @@
+io.dropwizard.cassandra.protocolVersion.DefaultProtocolVersionFactory
+io.dropwizard.cassandra.protocolVersion.DseProtocolVersionFactory

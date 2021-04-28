@@ -24,7 +24,7 @@ public class CassandraHealthCheck extends HealthCheck {
     }
 
     @Override
-    protected Result check() throws Exception {
+    protected Result check() {
         try {
             session.executeAsync(validationQuery).toCompletableFuture().get(timeout.toMilliseconds(), TimeUnit.MILLISECONDS);
             return Result.healthy();

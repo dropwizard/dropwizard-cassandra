@@ -16,6 +16,7 @@ import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,14 +49,10 @@ public class DropwizardCassandraIT {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        final String cassandraAddress = CASSANDRA.getSession()
-                .getMetadata()
-                .getNodes()
-                .values()
-                .toArray()[0]
-                .toString();
+        EmbeddedCassandraServerHelper.startEmbeddedCassandra();
         app = new DropwizardTestSupport<>(SmokeTestApp.class, Resources.getResource("minimal.yaml").getPath(),
-                ConfigOverride.config("contactPoints", cassandraAddress));
+                ConfigOverride.config("cassandra.contactPoints[0].host", EmbeddedCassandraServerHelper.getHost()),
+                ConfigOverride.config("cassandra.contactPoints[0].port", "" + EmbeddedCassandraServerHelper.getNativeTransportPort()));
         app.before();
     }
 
@@ -65,7 +62,6 @@ public class DropwizardCassandraIT {
     }
 
     @Test
-    @Ignore
     public void canQueryCassandra() {
         final CqlSession session = ((SmokeTestApp) app.getApplication()).getSession();
         final ResultSet resultSet = session.execute("SELECT * FROM system_schema.columns");
@@ -77,13 +73,13 @@ public class DropwizardCassandraIT {
     }
 
     @Test
-    @Ignore
+    //@Ignore
     public void cassandraMetricsArePublished() {
-        assertThat(app.getEnvironment().metrics().getNames(), hasItem("cassandra.test-cluster.authentication-errors"));
+        assertThat(app.getEnvironment().metrics().getNames(), hasItem("s1.continuous-cql-requests"));
+        assertThat(app.getEnvironment().metrics().getNames(), hasItem("s1.nodes.localhost:9142.bytes-sent"));
     }
 
     @Test
-    @Ignore
     public void cassandraHealthCheckIsPublished() {
         final URI uri = UriBuilder.fromUri("http://localhost")
                 .port(app.getAdminPort())
@@ -93,11 +89,10 @@ public class DropwizardCassandraIT {
         final WebTarget target = ClientBuilder.newClient().target(uri);
         final String result = target.request().get(String.class);
 
-        assertThat(result, containsString("cassandra.test-cluster"));
+        assertThat(result, containsString("s1"));
     }
 
     @Test
-    @Ignore
     public void metricsShouldBeInitialized() {
         final CqlSession session = ((SmokeTestApp) app.getApplication()).getSession();
         assertThat(session.getMetrics(), is(not(nullValue())));

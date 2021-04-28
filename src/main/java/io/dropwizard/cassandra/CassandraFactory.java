@@ -15,10 +15,10 @@ import io.dropwizard.cassandra.auth.AuthProviderFactory;
 import io.dropwizard.cassandra.health.CassandraHealthCheck;
 import io.dropwizard.cassandra.loadbalancing.LoadBalancingPolicyFactory;
 import io.dropwizard.cassandra.managed.CassandraManager;
-import io.dropwizard.cassandra.metrics.CassandraMetricRegistryListener;
 import io.dropwizard.cassandra.network.AddressTranslatorFactory;
 import io.dropwizard.cassandra.options.CassandraOption;
 import io.dropwizard.cassandra.pooling.PoolingOptionsFactory;
+import io.dropwizard.cassandra.protocolVersion.ProtocolVersionFactory;
 import io.dropwizard.cassandra.reconnection.ExponentialReconnectionPolicyFactory;
 import io.dropwizard.cassandra.reconnection.ReconnectionPolicyFactory;
 import io.dropwizard.cassandra.request.RequestOptionsFactory;
@@ -54,7 +54,7 @@ public abstract class CassandraFactory implements Discoverable {
     protected String validationQuery = "SELECT key FROM system.local;";
     @NotNull
     @JsonProperty
-    protected ProtocolVersion protocolVersion = ProtocolVersion.DEFAULT;
+    protected ProtocolVersionFactory protocolVersion;
     @Valid
     @JsonProperty
     protected SSLOptionsFactory ssl;
@@ -95,6 +95,27 @@ public abstract class CassandraFactory implements Discoverable {
     protected LoadBalancingPolicyFactory loadBalancingPolicy;
     @JsonProperty
     protected List<CassandraOption> cassandraOptions;
+    @JsonProperty
+    protected List<String> sessionMetrics;
+
+    @JsonProperty
+    protected List<String> nodeMetrics;
+
+    public List<String> getSessionMetrics() {
+        return sessionMetrics;
+    }
+
+    public void setSessionMetrics(List<String> sessionMetrics) {
+        this.sessionMetrics = sessionMetrics;
+    }
+
+    public List<String> getNodeMetrics() {
+        return nodeMetrics;
+    }
+
+    public void setNodeMetrics(List<String> nodeMetrics) {
+        this.nodeMetrics = nodeMetrics;
+    }
 
     public String getSessionName() {
         return sessionName;
@@ -131,7 +152,7 @@ public abstract class CassandraFactory implements Discoverable {
     public boolean isMetricsEnabled() {
         return metricsEnabled;
     }
-
+  
     public void setMetricsEnabled(final boolean metricsEnabled) {
         this.metricsEnabled = metricsEnabled;
     }
@@ -144,11 +165,11 @@ public abstract class CassandraFactory implements Discoverable {
         this.validationQuery = validationQuery;
     }
 
-    public ProtocolVersion getProtocolVersion() {
+    public ProtocolVersionFactory getProtocolVersion() {
         return protocolVersion;
     }
 
-    public void setProtocolVersion(final ProtocolVersion protocolVersion) {
+    public void setProtocolVersion(final ProtocolVersionFactory protocolVersion) {
         this.protocolVersion = protocolVersion;
     }
 
@@ -260,16 +281,22 @@ public abstract class CassandraFactory implements Discoverable {
         DropwizardProgrammaticDriverConfigLoaderBuilder configLoaderBuilder =
                 DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
 
-        configLoaderBuilder.withNullSafeString(DefaultDriverOption.PROTOCOL_VERSION, protocolVersion.name())
-                .withNullSafeString(DefaultDriverOption.PROTOCOL_COMPRESSION, compression);
 
+        configLoaderBuilder.withNullSafeStringList(DefaultDriverOption.METRICS_NODE_ENABLED, nodeMetrics);
+        configLoaderBuilder.withNullSafeStringList(DefaultDriverOption.METRICS_SESSION_ENABLED, sessionMetrics);
+        configLoaderBuilder.withNullSafeString(DefaultDriverOption.PROTOCOL_COMPRESSION, compression);
 
         this.configBuilderHelper(ssl, configLoaderBuilder)
                 .configBuilderHelper(authProvider, configLoaderBuilder)
                 .configBuilderHelper(retryPolicy, configLoaderBuilder)
                 .configBuilderHelper(speculativeExecutionPolicy, configLoaderBuilder)
                 .configBuilderHelper(poolingOptions, configLoaderBuilder)
-                .configBuilderHelper(addressTranslator, configLoaderBuilder);
+                .configBuilderHelper(addressTranslator, configLoaderBuilder)
+                .configBuilderHelper(requestOptionsFactory, configLoaderBuilder)
+                .configBuilderHelper(loadBalancingPolicy, configLoaderBuilder)
+                .configBuilderHelper(timestampGenerator, configLoaderBuilder)
+                .configBuilderHelper(reconnectionPolicyFactory, configLoaderBuilder)
+                .configBuilderHelper(protocolVersion, configLoaderBuilder);
 
         if (Objects.nonNull(cassandraOptions)) {
             cassandraOptions.forEach(opt -> opt.accept(configLoaderBuilder));
@@ -296,14 +323,6 @@ public abstract class CassandraFactory implements Discoverable {
         log.debug("Registering Cassandra health check for name={}", session.getName());
         final CassandraHealthCheck healthCheck = new CassandraHealthCheck(session, getValidationQuery(), getHealthCheckTimeout());
         healthChecks.register(session.getName(), healthCheck);
-    }
-
-    protected void setUpMetrics(final CqlSession session, final MetricRegistry metrics) {
-        // ties the Cassandra driver metrics into the app's MetricRegistry
-        if (metricsEnabled) {
-            final CassandraMetricRegistryListener metricRegistryListener = new CassandraMetricRegistryListener(metrics, session.getName());
-            session.getMetrics().ifPresent(metricsRegistry -> metricsRegistry.getRegistry().addListener(metricRegistryListener));
-        }
     }
 
     protected void setUpLifecycle(final CqlSession session, final LifecycleEnvironment lifecycle) {

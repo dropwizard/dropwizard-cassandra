@@ -48,8 +48,6 @@ public class BasicCassandraFactory extends CassandraFactory {
 
         setUpHealthChecks(session, healthChecks);
 
-        setUpMetrics(session, metrics);
-
         setUpLifecycle(session, lifecycle);
 
         log.debug("Successfully setup basic Cql Session={}", session.getName());
