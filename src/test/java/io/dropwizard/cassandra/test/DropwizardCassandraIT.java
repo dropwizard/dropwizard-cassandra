@@ -44,16 +44,12 @@ public class DropwizardCassandraIT {
     private static DropwizardTestSupport<SmokeTestConfiguration> app;
 
     static {
-        try {
-            EmbeddedCassandraServerHelper.startEmbeddedCassandra();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         System.setProperty("cassandra.storagedir", "target/embeddedCassandra/cdc");
     }
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
+        EmbeddedCassandraServerHelper.startEmbeddedCassandra();
         app = new DropwizardTestSupport<>(SmokeTestApp.class, Resources.getResource("minimal.yaml").getPath(),
                 ConfigOverride.config("cassandra.contactPoints[0].host", EmbeddedCassandraServerHelper.getHost()),
                 ConfigOverride.config("cassandra.contactPoints[0].port", "" + EmbeddedCassandraServerHelper.getNativeTransportPort()));
