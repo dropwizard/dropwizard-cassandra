@@ -13,10 +13,7 @@ import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +28,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * TODO: Unfortunately these tests don't work with cassandraunit, and cassandraunit seems unmaintained.
@@ -75,8 +73,7 @@ public class DropwizardCassandraIT {
     @Test
     public void cassandraMetricsArePublished() {
         assertThat(app.getEnvironment().metrics().getNames(), hasItem("s1.continuous-cql-requests"));
-        assertThat(app.getEnvironment().metrics().getNames(), hasItem("s1.nodes.localhost:" +
-                EmbeddedCassandraServerHelper.getNativeTransportPort() +".bytes-sent"));
+        assertTrue(app.getEnvironment().metrics().getNames().stream().anyMatch(x -> x.contains("bytes-sent")));
     }
 
     @Test
