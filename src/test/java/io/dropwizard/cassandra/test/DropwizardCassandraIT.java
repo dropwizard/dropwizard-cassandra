@@ -73,10 +73,10 @@ public class DropwizardCassandraIT {
     }
 
     @Test
-    //@Ignore
     public void cassandraMetricsArePublished() {
         assertThat(app.getEnvironment().metrics().getNames(), hasItem("s1.continuous-cql-requests"));
-        assertThat(app.getEnvironment().metrics().getNames(), hasItem("s1.nodes.localhost:9142.bytes-sent"));
+        assertThat(app.getEnvironment().metrics().getNames(), hasItem("s1.nodes.localhost:" +
+                EmbeddedCassandraServerHelper.getNativeTransportPort() +".bytes-sent"));
     }
 
     @Test
