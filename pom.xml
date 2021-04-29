@@ -12,7 +12,7 @@
   <packaging>jar</packaging>
 
   <name>Dropwizard Cassandra</name>
-  <description>Provides easy integration for Dropwizard applications with Apache Cassandra</description>
+  <description>Provides easy integration for Dropwizard applications with Apache Cassandra using the DataStax 4.x client</description>
   <url>https://github.com/dropwizard/dropwizard-cassandra</url>
 
   <licenses>
