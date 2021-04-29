@@ -8,7 +8,7 @@
 
   <groupId>io.dropwizard.modules</groupId>
   <artifactId>dropwizard-cassandra</artifactId>
-  <version>2.0.0</version>
+  <version>2.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Dropwizard Cassandra</name>
@@ -27,7 +27,7 @@
     <developerConnection>scm:git:git@github.com:dropwizard/dropwizard-cassandra.git</developerConnection>
     <connection>scm:git:https://github.com/dropwizard/dropwizard-cassandra.git</connection>
     <url>https://github.com/dropwizard/dropwizard-cassandra</url>
-    <tag>dropwizard-cassandra-2.0.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <ciManagement>
