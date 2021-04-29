@@ -75,8 +75,7 @@ public class DropwizardCassandraIT {
     @Test
     public void cassandraMetricsArePublished() {
         assertThat(app.getEnvironment().metrics().getNames(), hasItem("s1.continuous-cql-requests"));
-        assertThat(app.getEnvironment().metrics().getNames(), hasItem("s1.nodes.localhost:" +
-                EmbeddedCassandraServerHelper.getNativeTransportPort() +".bytes-sent"));
+        assertThat(app.getEnvironment().metrics().getNames(), hasItem("bytes-sent"));
     }
 
     @Test
