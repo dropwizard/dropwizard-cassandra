@@ -74,7 +74,7 @@
 
     <brave.version>5.9.1</brave.version>
     <dropwizard.version>2.0.28</dropwizard.version>
-    <cassandra-driver.version>4.13.0</cassandra-driver.version>
+    <cassandra-driver.version>4.14.0</cassandra-driver.version>
     <cassandra-brave.version>0.11.1</cassandra-brave.version>
   </properties>
 
