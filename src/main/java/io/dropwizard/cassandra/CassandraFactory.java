@@ -23,6 +23,7 @@ import io.dropwizard.cassandra.reconnection.ExponentialReconnectionPolicyFactory
 import io.dropwizard.cassandra.reconnection.ReconnectionPolicyFactory;
 import io.dropwizard.cassandra.request.RequestOptionsFactory;
 import io.dropwizard.cassandra.retry.RetryPolicyFactory;
+import io.dropwizard.cassandra.schema.SchemaOptionsFactory;
 import io.dropwizard.cassandra.speculativeexecution.SpeculativeExecutionPolicyFactory;
 import io.dropwizard.cassandra.ssl.SSLOptionsFactory;
 import io.dropwizard.cassandra.timestamp.AtomicMonotonicTimestampGeneratorFactory;
@@ -73,6 +74,9 @@ public abstract class CassandraFactory implements Discoverable {
     @Valid
     @JsonProperty
     protected PoolingOptionsFactory poolingOptions;
+    @Valid
+    @JsonProperty
+    protected SchemaOptionsFactory schemaOptions;
     @Valid
     @JsonProperty
     protected AddressTranslatorFactory addressTranslator;
@@ -152,7 +156,7 @@ public abstract class CassandraFactory implements Discoverable {
     public boolean isMetricsEnabled() {
         return metricsEnabled;
     }
-  
+
     public void setMetricsEnabled(final boolean metricsEnabled) {
         this.metricsEnabled = metricsEnabled;
     }
@@ -219,6 +223,14 @@ public abstract class CassandraFactory implements Discoverable {
 
     public void setPoolingOptions(final PoolingOptionsFactory poolingOptions) {
         this.poolingOptions = poolingOptions;
+    }
+
+    public SchemaOptionsFactory getSchemaOptions() {
+        return schemaOptions;
+    }
+
+    public void setSchemaOptions(final SchemaOptionsFactory schemaOptions) {
+        this.schemaOptions = schemaOptions;
     }
 
     public AddressTranslatorFactory getAddressTranslator() {
@@ -291,6 +303,7 @@ public abstract class CassandraFactory implements Discoverable {
                 .configBuilderHelper(retryPolicy, configLoaderBuilder)
                 .configBuilderHelper(speculativeExecutionPolicy, configLoaderBuilder)
                 .configBuilderHelper(poolingOptions, configLoaderBuilder)
+                .configBuilderHelper(schemaOptions, configLoaderBuilder)
                 .configBuilderHelper(addressTranslator, configLoaderBuilder)
                 .configBuilderHelper(requestOptionsFactory, configLoaderBuilder)
                 .configBuilderHelper(loadBalancingPolicy, configLoaderBuilder)
