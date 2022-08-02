@@ -1,0 +1,3 @@
+agreementIntervalMilliseconds: 400
+agreementTimeoutSeconds: 20
+agreementWarnOnFailure: false

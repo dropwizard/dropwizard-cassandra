@@ -117,6 +117,10 @@ cassandra:
     - continuous-cql-requests
   nodeMetrics:
     - bytes-sent
+  schema:
+    agreementIntervalMilliseconds: 200
+    agreementTimeoutSeconds: 10
+    agreementWarnOnFailure: true
 ```
 
 #### Note on Multi-Environment Configuration
