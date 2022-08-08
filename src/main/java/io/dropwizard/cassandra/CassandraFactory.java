@@ -5,7 +5,6 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.health.HealthCheckRegistry;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
-import com.datastax.oss.driver.api.core.ProtocolVersion;
 import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
 import com.datastax.oss.driver.api.core.config.DriverConfigLoader;
 import com.datastax.oss.driver.api.core.config.ProgrammaticDriverConfigLoaderBuilder;
@@ -53,7 +52,6 @@ public abstract class CassandraFactory implements Discoverable {
     @NotNull
     @JsonProperty
     protected String validationQuery = "SELECT key FROM system.local;";
-    @NotNull
     @JsonProperty
     protected ProtocolVersionFactory protocolVersion;
     @Valid
