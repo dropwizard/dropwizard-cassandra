@@ -66,7 +66,9 @@ cassandra:
     requestSerialConsistency: local
     requestDefaultIdempotence: true
   metricsEnabled: true
-  protocolVersion: DEFAULT
+  protocolVersion:
+    type: default
+    version: V5
   ssl:
     type: default
     cipherSuites: ["a", "b"]
