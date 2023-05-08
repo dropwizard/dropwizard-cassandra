@@ -6,7 +6,7 @@ import io.dropwizard.cassandra.DropwizardCassandraConfigBuilder;
 import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 import io.dropwizard.util.Duration;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 public class PoolingOptionsFactory implements DropwizardCassandraConfigBuilder {
     @JsonProperty

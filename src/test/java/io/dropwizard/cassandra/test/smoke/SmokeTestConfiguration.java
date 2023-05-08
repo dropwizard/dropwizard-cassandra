@@ -5,8 +5,8 @@ import io.dropwizard.cassandra.CassandraFactory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.core.Configuration;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 public class SmokeTestConfiguration extends Configuration {
     @Valid

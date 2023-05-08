@@ -3,7 +3,7 @@ package io.dropwizard.cassandra;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.validation.PortRange;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 public class ContactPoint {
     @NotNull

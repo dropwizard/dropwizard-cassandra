@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.util.List;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @JsonTypeName("basic")
 public class BasicCassandraFactory extends CassandraFactory {
