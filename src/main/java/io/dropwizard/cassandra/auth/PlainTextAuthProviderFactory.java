@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @JsonTypeName("plain-text")
 public class PlainTextAuthProviderFactory implements AuthProviderFactory {

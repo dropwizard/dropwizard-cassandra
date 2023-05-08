@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.dropwizard.cassandra.DropwizardProgrammaticDriverConfigLoaderBuilder;
 import io.dropwizard.util.Duration;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @JsonTypeName("constant")
 public class ConstantSpeculativeExecutionPolicyFactory implements SpeculativeExecutionPolicyFactory {

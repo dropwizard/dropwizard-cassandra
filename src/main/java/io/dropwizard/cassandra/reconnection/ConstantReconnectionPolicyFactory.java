@@ -10,7 +10,7 @@ import io.dropwizard.validation.MaxDuration;
 
 import java.util.concurrent.TimeUnit;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @JsonTypeName("constant")
 public class ConstantReconnectionPolicyFactory implements ReconnectionPolicyFactory {
