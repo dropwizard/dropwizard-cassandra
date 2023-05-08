@@ -1,6 +1,6 @@
 package io.dropwizard.cassandra;
 
-import io.dropwizard.Configuration;
+import io.dropwizard.core.Configuration;
 
 /**
  * Provides access to Cassandra configuration and factory based on it.

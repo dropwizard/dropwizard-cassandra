@@ -9,7 +9,7 @@ import io.dropwizard.configuration.ConfigurationException;
 import io.dropwizard.configuration.YamlConfigurationFactory;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.jersey.validation.Validators;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.validation.Validator;
 import java.io.File;
@@ -21,14 +21,14 @@ import static io.dropwizard.cassandra.schema.SchemaOptionsFactory.DEFAULT_SCHEMA
 import static io.dropwizard.cassandra.schema.SchemaOptionsFactory.DEFAULT_SCHEMA_AGREEMENT_WARN_ON_FAILURE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SchemaOptionsFactoryTest {
+class SchemaOptionsFactoryTest {
     private final ObjectMapper objectMapper = Jackson.newObjectMapper();
     private final Validator validator = Validators.newValidator();
     private final YamlConfigurationFactory<SchemaOptionsFactory> factory =
             new YamlConfigurationFactory<>(SchemaOptionsFactory.class, validator, objectMapper, "dw");
 
     @Test
-    public void shouldBuildDefaultSchemaOptions() throws URISyntaxException, IOException, ConfigurationException {
+    void shouldBuildDefaultSchemaOptions() throws URISyntaxException, IOException, ConfigurationException {
         // Load a default copy of the options factory
         final SchemaOptionsFactory factory = this.factory.build();
 
@@ -54,7 +54,7 @@ public class SchemaOptionsFactoryTest {
     }
 
     @Test
-    public void shouldBuildSchemaOptions() throws URISyntaxException, IOException, ConfigurationException {
+    void shouldBuildSchemaOptions() throws URISyntaxException, IOException, ConfigurationException {
         // Load a customized copy of the optiosn factory as defined in the yaml file
         final File yaml = new File(Resources.getResource("smoke/schema/schema-options.yaml").toURI());
         final SchemaOptionsFactory factory = this.factory.build(yaml);

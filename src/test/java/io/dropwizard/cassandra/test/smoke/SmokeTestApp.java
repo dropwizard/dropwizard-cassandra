@@ -4,10 +4,10 @@ import brave.Tracing;
 import brave.propagation.StrictScopeDecorator;
 import brave.propagation.ThreadLocalCurrentTraceContext;
 import com.datastax.oss.driver.api.core.CqlSession;
-import io.dropwizard.Application;
-import io.dropwizard.setup.Bootstrap;
-import io.dropwizard.setup.Environment;
-import org.junit.AfterClass;
+import io.dropwizard.core.Application;
+import io.dropwizard.core.setup.Bootstrap;
+import io.dropwizard.core.setup.Environment;
+import org.junit.jupiter.api.AfterAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,8 +22,8 @@ public class SmokeTestApp extends Application<SmokeTestConfiguration> {
 
     private CqlSession session;
 
-    @AfterClass
-    public static void tearDownAfterClass() {
+    @AfterAll
+    static void tearDownAfterClass() {
         tracing.close();
     }
 

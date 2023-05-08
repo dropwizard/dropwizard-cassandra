@@ -10,7 +10,7 @@ import io.dropwizard.configuration.YamlConfigurationFactory;
 import io.dropwizard.jackson.DiscoverableSubtypeResolver;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.jersey.validation.Validators;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import javax.validation.Validator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class EC2MultiRegionAddressTranslatorFactoryTest {
+class EC2MultiRegionAddressTranslatorFactoryTest {
     private final ObjectMapper objectMapper = Jackson.newObjectMapper();
     private final Validator validator = Validators.newValidator();
     private final YamlConfigurationFactory<AddressTranslatorFactory> factory =
@@ -28,13 +28,13 @@ public class EC2MultiRegionAddressTranslatorFactoryTest {
     DropwizardProgrammaticDriverConfigLoaderBuilder builder = DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
 
     @Test
-    public void isDiscoverable() throws Exception {
+    void isDiscoverable() throws Exception {
         assertThat(new DiscoverableSubtypeResolver().getDiscoveredSubtypes())
                 .contains(EC2MultiRegionAddressTranslatorFactory.class);
     }
 
     @Test
-    public void shouldBuildEC2MultiRegionAddressTranslator() throws URISyntaxException, IOException, ConfigurationException {
+    void shouldBuildEC2MultiRegionAddressTranslator() throws URISyntaxException, IOException, ConfigurationException {
         final File yaml = new File(Resources.getResource("smoke/network/ec2.yaml").toURI());
         final AddressTranslatorFactory factory = this.factory.build(yaml);
         assertThat(factory).isInstanceOf(EC2MultiRegionAddressTranslatorFactory.class);

@@ -10,7 +10,7 @@ import io.dropwizard.configuration.YamlConfigurationFactory;
 import io.dropwizard.jackson.DiscoverableSubtypeResolver;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.jersey.validation.Validators;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.validation.Validator;
 import java.io.File;
@@ -24,13 +24,13 @@ public abstract class LoadBalancingTestHelper<T extends BasicPolicyFactory> {
             new YamlConfigurationFactory<>(LoadBalancingPolicyFactory.class, validator, objectMapper, "dw");
 
     @Test
-    public void isDiscoverable() throws Exception {
+    void isDiscoverable() throws Exception {
         assertThat(new DiscoverableSubtypeResolver().getDiscoveredSubtypes())
                 .contains(getPolicyFactoryClass());
     }
 
     @Test
-    public void shouldBuildADCAwareRoundRobinPolicy() throws Exception {
+    void shouldBuildADCAwareRoundRobinPolicy() throws Exception {
         final File yaml = new File(Resources.getResource(getYaml()).toURI());
         final LoadBalancingPolicyFactory factory = this.factory.build(yaml);
         assertThat(factory).isInstanceOf(getPolicyFactoryClass());

@@ -11,7 +11,7 @@ import io.dropwizard.configuration.YamlConfigurationFactory;
 import io.dropwizard.jackson.DiscoverableSubtypeResolver;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.jersey.validation.Validators;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,20 +21,20 @@ import javax.validation.Validator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class JdkSslFactoryTest {
+class JdkSslFactoryTest {
     private final ObjectMapper objectMapper = Jackson.newObjectMapper();
     private final Validator validator = Validators.newValidator();
     private final YamlConfigurationFactory<SSLOptionsFactory> factory =
             new YamlConfigurationFactory<>(SSLOptionsFactory.class, validator, objectMapper, "dw");
 
     @Test
-    public void isDiscoverable() throws Exception {
+    void isDiscoverable() throws Exception {
         assertThat(new DiscoverableSubtypeResolver().getDiscoveredSubtypes())
                 .contains(JdkSslFactory.class);
     }
 
     @Test
-    public void shouldBuildJdkSSLOptions() throws URISyntaxException, IOException, ConfigurationException {
+    void shouldBuildJdkSSLOptions() throws URISyntaxException, IOException, ConfigurationException {
         final File yaml = new File(Resources.getResource("smoke/ssl/jdk.yaml").toURI());
         final SSLOptionsFactory factory = this.factory.build(yaml);
         assertThat(factory).isInstanceOf(JdkSslFactory.class);

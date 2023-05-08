@@ -10,7 +10,7 @@ import io.dropwizard.configuration.YamlConfigurationFactory;
 import io.dropwizard.jackson.DiscoverableSubtypeResolver;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.jersey.validation.Validators;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,12 +18,12 @@ import java.net.URISyntaxException;
 
 import javax.validation.Validator;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AtomicMonotonicTimestampGeneratorFactoryTest {
+class AtomicMonotonicTimestampGeneratorFactoryTest {
 
     private final ObjectMapper objectMapper = Jackson.newObjectMapper();
     private final Validator validator = Validators.newValidator();
@@ -32,7 +32,7 @@ public class AtomicMonotonicTimestampGeneratorFactoryTest {
     private final DropwizardProgrammaticDriverConfigLoaderBuilder builder = DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
 
     @Test
-    public void shouldBuildAnAtomicMonotonicTimestampGenerator() throws URISyntaxException, IOException,
+    void shouldBuildAnAtomicMonotonicTimestampGenerator() throws URISyntaxException, IOException,
             ConfigurationException {
         final File yml = new File(Resources.getResource("smoke/timestamp/atomic-monotonic.yaml")
                 .toURI());
@@ -45,7 +45,7 @@ public class AtomicMonotonicTimestampGeneratorFactoryTest {
     }
 
     @Test
-    public void buildsTimestampGenerator() throws Exception {
+    void buildsTimestampGenerator() throws Exception {
         final TimestampGeneratorFactory factory = new AtomicMonotonicTimestampGeneratorFactory();
 
         factory.accept(builder);
@@ -55,7 +55,7 @@ public class AtomicMonotonicTimestampGeneratorFactoryTest {
     }
 
     @Test
-    public void isDiscoverable() {
+    void isDiscoverable() {
         assertThat(new DiscoverableSubtypeResolver().getDiscoveredSubtypes(),
                 hasItem(AtomicMonotonicTimestampGeneratorFactory.class));
     }
