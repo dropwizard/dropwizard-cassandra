@@ -11,7 +11,7 @@ import io.dropwizard.jackson.DiscoverableSubtypeResolver;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.jersey.validation.Validators;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,13 +19,12 @@ import java.net.URISyntaxException;
 
 import javax.validation.Validator;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
-public class ConsistencyDowngradingRetryPolicyFactoryTest {
+class ConsistencyDowngradingRetryPolicyFactoryTest {
     private final ObjectMapper objectMapper = Jackson.newObjectMapper();
     private final Validator validator = Validators.newValidator();
     private final YamlConfigurationFactory<RetryPolicyFactory> factory =
@@ -33,7 +32,7 @@ public class ConsistencyDowngradingRetryPolicyFactoryTest {
     private final DropwizardProgrammaticDriverConfigLoaderBuilder builder = DropwizardProgrammaticDriverConfigLoaderBuilder.newInstance();
 
     @Test
-    public void shouldBuildAConfigurableRetryPolicy() throws URISyntaxException, IOException, ConfigurationException {
+    void shouldBuildAConfigurableRetryPolicy() throws URISyntaxException, IOException, ConfigurationException {
         final File yml = new File(Resources.getResource("smoke/retry/consistency-downgrading.yaml").toURI());
         final RetryPolicyFactory factory = this.factory.build(yml);
         assertThat(factory, instanceOf(ConsistencyDowngradingRetryPolicyFactory.class));
@@ -43,7 +42,7 @@ public class ConsistencyDowngradingRetryPolicyFactoryTest {
     }
 
     @Test
-    public void isDiscoverable() {
+    void isDiscoverable() {
         assertThat(new DiscoverableSubtypeResolver().getDiscoveredSubtypes(),
                 hasItem(ConsistencyDowngradingRetryPolicyFactory.class));
     }

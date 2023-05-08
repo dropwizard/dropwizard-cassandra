@@ -10,7 +10,7 @@ import io.dropwizard.configuration.YamlConfigurationFactory;
 import io.dropwizard.jackson.DiscoverableSubtypeResolver;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.jersey.validation.Validators;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,22 +19,22 @@ import java.net.URISyntaxException;
 import javax.validation.Validator;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class NoSpeculativeExecutionPolicyFactoryTest {
+class NoSpeculativeExecutionPolicyFactoryTest {
     private final ObjectMapper objectMapper = Jackson.newObjectMapper();
     private final Validator validator = Validators.newValidator();
     private final YamlConfigurationFactory<SpeculativeExecutionPolicyFactory> factory =
             new YamlConfigurationFactory<>(SpeculativeExecutionPolicyFactory.class, validator, objectMapper, "dw");
 
     @Test
-    public void isDiscoverable() throws Exception {
+    void isDiscoverable() throws Exception {
         assertThat(new DiscoverableSubtypeResolver().getDiscoveredSubtypes())
                 .contains(NoSpeculativeExecutionPolicyFactory.class);
     }
 
     @Test
-    public void shouldBuildNoSpeculativeExecutionPolicy() throws URISyntaxException, IOException, ConfigurationException {
+    void shouldBuildNoSpeculativeExecutionPolicy() throws URISyntaxException, IOException, ConfigurationException {
         final File yaml = new File(Resources.getResource("smoke/speculativeexecution/no.yaml").toURI());
         final SpeculativeExecutionPolicyFactory factory = this.factory.build(yaml);
         assertThat(factory).isInstanceOf(NoSpeculativeExecutionPolicyFactory.class);

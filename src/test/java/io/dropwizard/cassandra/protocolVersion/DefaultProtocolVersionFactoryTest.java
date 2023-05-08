@@ -14,7 +14,7 @@ import io.dropwizard.configuration.YamlConfigurationFactory;
 import io.dropwizard.jackson.DiscoverableSubtypeResolver;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.jersey.validation.Validators;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.validation.Validator;
 import java.io.File;
@@ -23,20 +23,20 @@ import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DefaultProtocolVersionFactoryTest {
+class DefaultProtocolVersionFactoryTest {
     private final ObjectMapper objectMapper = Jackson.newObjectMapper();
     private final Validator validator = Validators.newValidator();
     private final YamlConfigurationFactory<ProtocolVersionFactory> factory =
             new YamlConfigurationFactory<>(ProtocolVersionFactory.class, validator, objectMapper, "dw");
 
     @Test
-    public void isDiscoverable() throws Exception {
+    void isDiscoverable() throws Exception {
         assertThat(new DiscoverableSubtypeResolver().getDiscoveredSubtypes())
                 .contains(DefaultProtocolVersionFactory.class);
     }
 
     @Test
-    public void shouldBuildDefaultProtocol() throws URISyntaxException, IOException, ConfigurationException {
+    void shouldBuildDefaultProtocol() throws URISyntaxException, IOException, ConfigurationException {
         final File yaml = new File(Resources.getResource("smoke/protocolVersion/default.yaml").toURI());
         final ProtocolVersionFactory factory = this.factory.build(yaml);
         assertThat(factory).isInstanceOf(DefaultProtocolVersionFactory.class);

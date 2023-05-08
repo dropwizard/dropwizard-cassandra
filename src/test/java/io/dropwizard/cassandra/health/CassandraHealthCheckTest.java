@@ -6,8 +6,8 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.servererrors.ReadFailureException;
 import io.dropwizard.util.Duration;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class CassandraHealthCheckTest {
+class CassandraHealthCheckTest {
     private static final String QUERY = "SELECT key FROM system.local;";
     private static final Duration TIMEOUT = Duration.seconds(5);
 
@@ -30,15 +30,15 @@ public class CassandraHealthCheckTest {
     private final CassandraHealthCheck check = new CassandraHealthCheck(session, QUERY, TIMEOUT);
     final CompletableFuture future = mock(CompletableFuture.class);
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         reset(session);
         when(future.toCompletableFuture()).thenReturn(future);
         when(session.executeAsync(eq(QUERY))).thenReturn(future);
     }
 
     @Test
-    public void checkShouldReturnHealthyIfSucceeds() throws Exception {
+    void checkShouldReturnHealthyIfSucceeds() throws Exception {
         when(future.get(eq(TIMEOUT.toMilliseconds()), eq(TimeUnit.MILLISECONDS)))
                 .thenReturn(mock(ResultSet.class));
 
@@ -46,7 +46,7 @@ public class CassandraHealthCheckTest {
     }
 
     @Test
-    public void checkShouldReturnUnhealthyIfFailsDueToTimeout() throws Exception {
+    void checkShouldReturnUnhealthyIfFailsDueToTimeout() throws Exception {
         final TimeoutException exception = new TimeoutException();
         when(future.get(eq(TIMEOUT.toMilliseconds()), eq(TimeUnit.MILLISECONDS)))
                 .thenThrow(exception);
@@ -58,10 +58,10 @@ public class CassandraHealthCheckTest {
     }
 
     @Test
-    public void checkShouldReturnUnhealthyIfFailsDueToCassandraError() throws Exception {
+    void checkShouldReturnUnhealthyIfFailsDueToCassandraError() throws Exception {
         final ReadFailureException exception =
                 new ReadFailureException(null, ConsistencyLevel.ONE, 0, 1, 1,
-                         false, Collections.singletonMap(InetAddress.getByName("127.0.0.1"), 1));
+                        false, Collections.singletonMap(InetAddress.getByName("127.0.0.1"), 1));
         when(future.toCompletableFuture().get(eq(TIMEOUT.toMilliseconds()), eq(TimeUnit.MILLISECONDS)))
                 .thenThrow(exception);
 
