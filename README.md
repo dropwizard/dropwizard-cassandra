@@ -1,6 +1,6 @@
 # dropwizard-cassandra
 
-[![Build](https://github.com/dropwizard/dropwizard-cassandra/workflows/Build/badge.svg)](https://github.com/dropwizard/dropwizard-cassandra/actions?query=workflow%3ABuild)
+[![Build](https://github.com/dropwizard/dropwizard-cassandra/actions/workflows/build.yml/badge.svg?branch=4.0.x)](https://github.com/dropwizard/dropwizard-cassandra/actions/workflows/build.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dropwizard_dropwizard-cassandra&metric=alert_status)](https://sonarcloud.io/dashboard?id=dropwizard_dropwizard-cassandra)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.dropwizard.modules/dropwizard-cassandra/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.dropwizard.modules/dropwizard-cassandra/)
 
@@ -16,12 +16,13 @@ This bundle comes with out-of-the-box support for:
 * Schema migrations functionality, similar to what flyway and liquibase offer for SQL databases.
 
 ## Dropwizard Version Support Matrix
-| dropwizard-cassandra | Dropwizard v1.3.x  | Dropwizard v2.0.x  | Dropwizard v2.1.x  | Dropwizard v3.0.x  |
-|----------------------|--------------------|--------------------|--------------------|--------------------|
-| v1.3.x               | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x:                |
-| v1.4.x               | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x:                |
-| v2.0.x               | :question:         | :white_check_mark: | :white_check_mark: | :x:                |
-| v3.0.x               | :x:                | :x:                | :x:                | :white_check_mark: |
+| dropwizard-cassandra | Dropwizard v1.3.x  | Dropwizard v2.0.x  | Dropwizard v2.1.x  | Dropwizard v3.0.x  | Dropwizard v4.0.x  |
+|----------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
+| v1.3.x               | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x:                | :x:                |
+| v1.4.x               | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x:                | :x:                |
+| v2.0.x               | :question:         | :white_check_mark: | :white_check_mark: | :x:                | :x:                |
+| v3.0.x               | :x:                | :x:                | :x:                | :white_check_mark: | :x:                |
+| v4.0.x               | :x:                | :x:                | :x:                | :x:                | :white_check_mark: |
 
 ## Usage
 Add dependency on library.
@@ -31,13 +32,13 @@ Maven:
 <dependency>
   <groupId>io.dropwizard.modules</groupId>
   <artifactId>dropwizard-cassandra</artifactId>
-  <version>3.0.0</version>
+  <version>4.0.0</version>
 </dependency>
 ```
 
 Gradle:
 ```groovy
-compile "io.dropwizard.modules:dropwizard-cassandra:3.0.0"
+compile "io.dropwizard.modules:dropwizard-cassandra:4.0.0"
 ```
 
 ### Usage
