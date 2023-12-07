@@ -1,3 +1,4 @@
+---
 type: default
 cipherSuites: ["a", "b"]
 hostValidation: true

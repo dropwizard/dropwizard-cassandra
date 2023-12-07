@@ -1,3 +1,4 @@
+---
 type: constant
 delay: 1s
 maxSpeculativeExecutions: 3
