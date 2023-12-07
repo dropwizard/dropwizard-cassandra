@@ -1,3 +1,4 @@
+---
 consistencyLevel: TWO
 serialConsistencyLevel: TWO
 fetchSize: 1000
