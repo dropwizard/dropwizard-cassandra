@@ -1,3 +1,4 @@
+---
 cassandra:
   type: basic
   contactPoints:

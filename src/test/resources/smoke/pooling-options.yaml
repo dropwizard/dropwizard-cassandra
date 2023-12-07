@@ -1,3 +1,4 @@
+---
 heartbeatInterval: 5 seconds
 poolTimeout: 2 seconds
 local:

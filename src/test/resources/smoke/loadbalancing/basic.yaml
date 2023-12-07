@@ -1,3 +1,4 @@
+---
 type: basic
 localDataCenter: local
 dataCenterFailoverAllowLocalConsistencyLevels: true
