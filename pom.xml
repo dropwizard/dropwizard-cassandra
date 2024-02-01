@@ -73,7 +73,7 @@
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
     <brave.version>5.9.1</brave.version>
-    <dropwizard.version>2.1.11</dropwizard.version>
+    <dropwizard.version>2.1.12</dropwizard.version>
     <cassandra-driver.version>4.17.0</cassandra-driver.version>
     <cassandra-brave.version>0.13.1</cassandra-brave.version>
   </properties>
