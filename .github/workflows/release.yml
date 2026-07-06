@@ -7,5 +7,5 @@ on:
       - dropwizard-cassandra-*
 jobs:
   release:
-    uses: dropwizard/workflows/.github/workflows/release.yml@91afe30da07f7fc632020064a53f2c5ac0f4be9b # main
+    uses: dropwizard/workflows/.github/workflows/release.yml@0e920ffd2f8565385330680332f6152de022e065 # main
     secrets: inherit
